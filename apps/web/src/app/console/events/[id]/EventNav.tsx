@@ -18,10 +18,9 @@ export default function EventNav({
   const pathname = usePathname();
 
   return (
-    <nav className="flex gap-2 -mb-px overflow-x-auto py-1">
+    <nav className="flex gap-1 -mb-px overflow-x-auto py-1">
       {tabs.map((tab) => {
         const fullPath = `${basePath}${tab.href}`;
-        // Match exact or prefix for subroutes (e.g. agenda details)
         const isActive = tab.href === '' 
           ? pathname === basePath 
           : pathname.startsWith(fullPath);
@@ -30,24 +29,11 @@ export default function EventNav({
           <Link
             key={tab.href}
             href={fullPath}
-            className="px-4 py-2.5 text-xs font-semibold rounded-full transition-all duration-200 whitespace-nowrap"
-            style={{
-              background: isActive ? 'var(--ef-primary-gradient)' : 'transparent',
-              color: isActive ? '#ffffff' : 'var(--ef-text-secondary)',
-              boxShadow: isActive ? 'var(--ef-shadow-sm)' : 'none',
-            }}
-            onMouseEnter={(e) => {
-              if (!isActive) {
-                e.currentTarget.style.background = 'var(--ef-surface-container)';
-                e.currentTarget.style.color = 'var(--ef-text-primary)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!isActive) {
-                e.currentTarget.style.background = 'transparent';
-                e.currentTarget.style.color = 'var(--ef-text-secondary)';
-              }
-            }}
+            className={`px-4 py-2 text-xs font-semibold rounded-md whitespace-nowrap transition-colors ${
+              isActive
+                ? 'bg-slate-900 text-white'
+                : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'
+            }`}
           >
             {tab.label}
           </Link>

@@ -175,7 +175,7 @@ export default async function CheckoutPage({
           <div className="text-xs text-slate-600 space-y-2">
             <p className="font-bold text-slate-900">{event.name}</p>
             {event.startsAt && (
-              <p>📅 {new Date(event.startsAt).toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+              <p>📅 {new Date(event.startsAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
             )}
             <p className="capitalize">🏷️ {event.type.replace('_', ' ')}</p>
           </div>

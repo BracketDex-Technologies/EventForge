@@ -1,43 +1,47 @@
 import { prisma } from '@eventforge/db';
+import { notFound } from 'next/navigation';
+import Link from 'next/link';
 
-export default async function ConsoleAgendaPage({
+export default async function AgendaPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  
+
+  const event = await prisma.event.findUnique({
+    where: { id },
+  });
+
+  if (!event) notFound();
+
   const sessions = await prisma.session.findMany({
     where: { eventId: id },
     orderBy: { startsAt: 'asc' },
     include: {
       room: true,
-      speakers: { include: { speaker: true } }
+      track: true,
+      speakers: {
+        include: {
+          speaker: true
+        }
+      }
     }
   });
 
-  const formatBadge = (type: string) => {
-    const styles: Record<string, { bg: string; color: string }> = {
-      keynote: { bg: '#ede9fe', color: '#5b21b6' },
-      talk: { bg: 'var(--ef-info-bg)', color: 'var(--ef-info-text)' },
-      workshop: { bg: 'var(--ef-warning-bg)', color: 'var(--ef-warning-text)' },
-      panel: { bg: 'var(--ef-success-bg)', color: 'var(--ef-success-text)' },
-      break: { bg: '#f1f5f9', color: '#475569' },
-    };
-    return styles[type] || styles.break;
-  };
-
   return (
     <div className="space-y-6 max-w-6xl">
-      {/* Header */}
-      <div className="flex items-center justify-between animate-fade-in-up">
-        <div>
-          <h2 className="ef-headline-lg">Agenda & Sessions</h2>
-          <p className="text-[13px] mt-0.5" style={{ color: 'var(--ef-text-muted)' }}>
-            {sessions.length} session{sessions.length !== 1 ? 's' : ''} scheduled
-          </p>
+      <div className="flex items-center justify-between">
+        <div className="animate-fade-in-up">
+          <div className="flex items-center gap-2 text-sm mb-2 text-slate-400">
+            <Link href={`/console/events/${id}`} className="hover:text-indigo-600 transition-colors">Event Dashboard</Link>
+            <span>›</span>
+            <span className="text-slate-600">Agenda</span>
+          </div>
+          <h2 className="text-2xl font-bold text-slate-900">Agenda & Sessions</h2>
+          <p className="mt-1 text-sm text-slate-500">Manage the schedule, sessions, and tracks for your event.</p>
         </div>
-        <button className="ef-btn-primary">
+        <button className="ef-btn-primary animate-fade-in-up">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
           </svg>
@@ -45,22 +49,17 @@ export default async function ConsoleAgendaPage({
         </button>
       </div>
 
-      {/* Table */}
       <div className="ef-card animate-fade-in-up delay-200">
         {sessions.length === 0 ? (
           <div className="p-16 text-center">
-            <div className="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center"
-                 style={{ background: 'linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(59,130,246,0.08) 100%)' }}>
-              <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}
-                   style={{ color: 'var(--ef-primary)' }}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+            <div className="w-14 h-14 rounded-xl mx-auto mb-4 bg-slate-100 text-slate-500 flex items-center justify-center">
+              <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
               </svg>
             </div>
-            <p className="text-lg font-semibold" style={{ color: 'var(--ef-text-primary)' }}>
-              No sessions scheduled yet
-            </p>
-            <p className="text-sm mt-1" style={{ color: 'var(--ef-text-muted)' }}>
-              Start building your agenda by adding sessions.
+            <p className="text-base font-semibold text-slate-900">No sessions scheduled</p>
+            <p className="text-sm text-slate-500 mt-1">
+              Start building your event's agenda by adding your first session.
             </p>
           </div>
         ) : (
@@ -68,82 +67,38 @@ export default async function ConsoleAgendaPage({
             <thead>
               <tr>
                 <th>Time</th>
-                <th>Session</th>
-                <th>Format</th>
-                <th>Location</th>
+                <th>Title</th>
+                <th>Track / Room</th>
+                <th>Speakers</th>
                 <th className="text-right">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {sessions.map((session) => {
-                const badgeStyle = formatBadge(session.type);
-                return (
-                  <tr key={session.id}>
-                    <td className="whitespace-nowrap" style={{ color: 'var(--ef-text-secondary)', width: '120px' }}>
-                      <p className="font-medium" style={{ color: 'var(--ef-text-primary)' }}>
-                        {new Date(session.startsAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                      </p>
-                      <p className="text-[12px]" style={{ color: 'var(--ef-text-muted)' }}>
-                        to {new Date(session.endsAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                      </p>
-                    </td>
-                    <td>
-                      <p className="font-semibold" style={{ color: 'var(--ef-text-primary)' }}>
-                        {typeof session.title === 'string' ? session.title : (session.title as any)?.en || 'Untitled Session'}
-                      </p>
-                      {session.speakers.length > 0 && (
-                        <div className="flex items-center gap-2 mt-1.5">
-                          <div className="flex -space-x-1.5">
-                            {session.speakers.slice(0, 3).map(s => (
-                              <div
-                                key={s.speakerId}
-                                className="w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold border-2 border-white"
-                                style={{ background: 'linear-gradient(135deg, rgba(99,102,241,0.15), rgba(59,130,246,0.1))', color: 'var(--ef-primary)' }}
-                              >
-                                {s.speaker.name.charAt(0)}
-                              </div>
-                            ))}
-                          </div>
-                          <span className="text-[12px]" style={{ color: 'var(--ef-text-muted)' }}>
-                            {session.speakers.map(s => s.speaker.name).join(', ')}
-                          </span>
-                        </div>
-                      )}
-                    </td>
-                    <td>
-                      <span
-                        className="ef-badge capitalize"
-                        style={{ background: badgeStyle.bg, color: badgeStyle.color }}
-                      >
-                        {session.type}
-                      </span>
-                    </td>
-                    <td>
-                      <span className="text-[13px]" style={{ color: 'var(--ef-text-secondary)' }}>
-                        {session.room?.name || (
-                          <span style={{ color: 'var(--ef-text-muted)' }}>TBA</span>
-                        )}
-                      </span>
-                    </td>
-                    <td className="text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <button
-                          className="text-[12px] font-semibold px-3 py-1.5 rounded-lg transition-all duration-200 hover:bg-indigo-500/5"
-                          style={{ color: 'var(--ef-primary)' }}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          className="text-[12px] font-semibold px-3 py-1.5 rounded-lg transition-all duration-200 hover:bg-[var(--ef-danger-bg)]"
-                          style={{ color: 'var(--ef-danger)' }}
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
+              {sessions.map((session) => (
+                <tr key={session.id}>
+                  <td className="font-medium text-slate-900 whitespace-nowrap">
+                    {new Date(session.startsAt).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })} -
+                    {new Date(session.endsAt).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
+                  </td>
+                  <td className="font-semibold text-slate-900">
+                    {(session.title as any)?.en || 'Untitled Session'}
+                  </td>
+                  <td>
+                    <div className="flex flex-col gap-1 text-sm">
+                      {session.track ? <span className="text-indigo-600 font-medium">{session.track.name}</span> : <span className="text-slate-400">No Track</span>}
+                      <span className="text-slate-500">{session.room?.name || 'No Room'}</span>
+                    </div>
+                  </td>
+                  <td className="text-slate-600">
+                    {session.speakers.length > 0 
+                      ? session.speakers.map(s => s.speaker.name).join(', ')
+                      : <span className="text-slate-400">TBA</span>}
+                  </td>
+                  <td className="text-right">
+                    <button className="ef-btn-secondary text-xs px-3 py-1.5">Edit</button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         )}

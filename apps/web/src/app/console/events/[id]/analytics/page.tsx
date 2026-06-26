@@ -1,86 +1,42 @@
 import { prisma } from '@eventforge/db';
+import { notFound } from 'next/navigation';
+import Link from 'next/link';
 
-export default async function ConsoleAnalyticsPage({
+export default async function AnalyticsPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  
-  const [metrics, checkIns, orders] = await Promise.all([
-    prisma.eventMetricHourly.findMany({
-      where: { eventId: id },
-      orderBy: { hourBucket: 'asc' }
-    }),
-    prisma.checkIn.count({ where: { eventId: id } }),
-    prisma.order.findMany({ where: { eventId: id } })
-  ]);
 
-  const totalRegistrations = orders.filter(o => o.status === 'completed').length;
-  const totalRevenue = orders.filter(o => o.status === 'completed').reduce((acc, order) => acc + Number(order.totalCents), 0);
+  const event = await prisma.event.findUnique({
+    where: { id },
+  });
+
+  if (!event) notFound();
 
   return (
-    <div className="space-y-6 max-w-5xl">
-      <div className="flex items-center justify-between border-b pb-4">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">Event Analytics</h2>
+    <div className="space-y-6 max-w-6xl">
+      <div className="animate-fade-in-up">
+        <div className="flex items-center gap-2 text-sm mb-2 text-slate-400">
+          <Link href={`/console/events/${id}`} className="hover:text-indigo-600 transition-colors">Event Dashboard</Link>
+          <span>›</span>
+          <span className="text-slate-600">Analytics</span>
         </div>
-        <button className="bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-md font-bold text-sm shadow-sm">
-          Export CSV
-        </button>
+        <h2 className="text-2xl font-bold text-slate-900">Event Analytics</h2>
+        <p className="mt-1 text-sm text-slate-500">Track registrations, revenue, and attendee engagement.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-sm font-medium text-gray-500 mb-1">Total Registrations</h3>
-          <p className="text-3xl font-bold text-gray-900">{totalRegistrations}</p>
+      <div className="ef-card p-16 text-center animate-fade-in-up delay-200">
+        <div className="w-14 h-14 rounded-xl mx-auto mb-4 bg-indigo-50 text-indigo-500 flex items-center justify-center">
+          <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+          </svg>
         </div>
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-sm font-medium text-gray-500 mb-1">Gross Revenue</h3>
-          <p className="text-3xl font-bold text-gray-900">${(totalRevenue / 100).toFixed(2)}</p>
-        </div>
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-sm font-medium text-gray-500 mb-1">Total Check-ins</h3>
-          <p className="text-3xl font-bold text-gray-900">{checkIns}</p>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="px-6 py-5 border-b">
-          <h3 className="text-lg font-bold text-gray-900">Recent Activity Rollups</h3>
-        </div>
-        {metrics.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">
-            No activity metrics recorded yet. Metrics are aggregated hourly.
-          </div>
-        ) : (
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date & Time</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Registrations</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Check-ins</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Page Views</th>
-                <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Revenue</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {metrics.slice(-10).reverse().map((m) => (
-                <tr key={m.id}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {new Date(m.hourBucket).toLocaleString()}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{m.registrations}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{m.checkIns}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{m.pageViews}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-900 font-medium">
-                    ${(Number(m.revenueCents) / 100).toFixed(2)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+        <h3 className="text-lg font-semibold text-slate-900">Analytics Coming Soon</h3>
+        <p className="text-slate-500 max-w-sm mx-auto mt-2">
+          We are currently building comprehensive analytics dashboards for your events. Check back later!
+        </p>
       </div>
     </div>
   );

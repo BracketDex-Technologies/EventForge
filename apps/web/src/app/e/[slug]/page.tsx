@@ -49,7 +49,7 @@ export default async function PublicEventPage({
             {event.startsAt && (
               <span className="px-4.5 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
                 📅{' '}
-                {new Date(event.startsAt).toLocaleDateString(undefined, {
+                {new Date(event.startsAt).toLocaleDateString('en-US', {
                   weekday: 'long',
                   month: 'long',
                   day: 'numeric',
@@ -146,7 +146,7 @@ export default async function PublicEventPage({
               >
                 <div className="w-24 flex-shrink-0 text-slate-500 font-semibold text-xs border-b sm:border-b-0 sm:border-r border-slate-100 pb-2 sm:pb-0 sm:pr-4">
                   <p className="text-slate-900">
-                    {new Date(session.startsAt).toLocaleTimeString([], {
+                    {new Date(session.startsAt).toLocaleTimeString('en-US', {
                       hour: '2-digit',
                       minute: '2-digit',
                     })}

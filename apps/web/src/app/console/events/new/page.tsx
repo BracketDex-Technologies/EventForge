@@ -11,35 +11,29 @@ export default function NewEventPage() {
     e.preventDefault();
     setLoading(true);
     
-    // In a real app we'd post to our NestJS API
-    // For now, this is a mock to show the UI
-    const formData = new FormData(e.currentTarget);
-    const name = formData.get('name');
-    
     // Mock save delay
     await new Promise(r => setTimeout(r, 1000));
     
-    // Redirect back to events list
     router.push('/console/events');
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6 animate-fade-in-up">
-      {/* Back navigation & Header */}
+    <div className="p-8 max-w-2xl mx-auto space-y-6 animate-fade-in-up">
       <div>
-        <button onClick={() => router.back()} className="text-[12px] font-semibold flex items-center gap-1 mb-2 hover:underline" style={{ color: 'var(--ef-primary)' }}>
+        <button 
+          onClick={() => router.back()} 
+          className="text-xs font-semibold flex items-center gap-1 mb-2 text-indigo-600 hover:text-indigo-700 transition-colors"
+        >
           &larr; Back to Events
         </button>
-        <h2 className="ef-headline-lg">Create New Event</h2>
-        <p className="text-[13px] mt-0.5" style={{ color: 'var(--ef-text-muted)' }}>
-          Configure the core metadata for your new event forge.
+        <h1 className="text-2xl font-bold text-slate-900">Create New Event</h1>
+        <p className="mt-1 text-sm text-slate-500">
+          Configure the core metadata for your new event.
         </p>
       </div>
 
-      {/* Form Card */}
-      <div className="ef-card p-8 bg-white shadow-md">
+      <div className="ef-card p-8">
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Event Name */}
           <div>
             <label htmlFor="name" className="ef-label">Event Name</label>
             <input 
@@ -52,7 +46,6 @@ export default function NewEventPage() {
             />
           </div>
 
-          {/* Event Type */}
           <div>
             <label htmlFor="type" className="ef-label">Event Type</label>
             <select 
@@ -68,7 +61,6 @@ export default function NewEventPage() {
             </select>
           </div>
 
-          {/* Dates Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
               <label htmlFor="startsAt" className="ef-label">Start Date & Time</label>
@@ -90,7 +82,6 @@ export default function NewEventPage() {
             </div>
           </div>
 
-          {/* Action Buttons */}
           <div className="pt-6 flex justify-end gap-3 border-t border-slate-100">
             <button 
               type="button" 
@@ -102,7 +93,7 @@ export default function NewEventPage() {
             <button 
               type="submit" 
               disabled={loading}
-              className="ef-btn-primary"
+              className="ef-btn-primary disabled:opacity-60"
             >
               {loading ? 'Creating...' : 'Create Event'}
             </button>

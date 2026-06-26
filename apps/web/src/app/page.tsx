@@ -1,146 +1,148 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col font-sans" style={{ background: 'var(--ef-bg)' }}>
-      {/* ─── Hero Header ─── */}
-      <header className="w-full py-5 px-8 flex items-center justify-between sticky top-0 z-50 backdrop-blur-md border-b border-[rgba(0,0,0,0.03)] bg-white/70">
+    <div className="min-h-screen flex flex-col bg-slate-50">
+      {/* Header */}
+      <header className="w-full py-4 px-6 lg:px-10 flex items-center justify-between sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
+        <Link href="/" className="inline-flex items-center gap-2.5">
+          <Image src="/logo-icon.svg" alt="EventForge" width={32} height={32} />
+          <span className="font-bold text-lg tracking-tight text-slate-900">EventForge</span>
+        </Link>
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white shadow-md shadow-indigo-500/30"
-               style={{ background: 'var(--ef-primary-gradient)' }}>
-            EF
-          </div>
-          <span className="font-bold text-lg tracking-tight" style={{ color: 'var(--ef-text-primary)' }}>
-            EventForge
-          </span>
-        </div>
-        <div className="flex items-center gap-4">
-          <Link href="/login" className="ef-btn-secondary" style={{ padding: '8px 20px', fontSize: '13px' }}>
-            Sign In
+          <Link href="/login" className="ef-btn-ghost text-sm">
+            Sign in
           </Link>
-          <Link href="/login" className="ef-btn-primary" style={{ padding: '8px 20px', fontSize: '13px' }}>
-            Start Free
+          <Link href="/login" className="ef-btn-primary text-sm">
+            Get started
           </Link>
         </div>
       </header>
 
-      {/* ─── Hero Content ─── */}
-      <main className="flex-1 flex flex-col">
-        <section className="relative overflow-hidden py-24 px-8 text-center"
-                 style={{ background: 'linear-gradient(135deg, #0f1629 0%, #1a1f3a 60%, #0f1629 100%)' }}>
-          {/* Dot pattern & background glow */}
-          <div className="absolute inset-0 ef-dot-pattern opacity-40" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full blur-[120px] opacity-10 pointer-events-none"
-               style={{ background: 'var(--ef-primary-gradient)' }} />
-
-          <div className="max-w-4xl mx-auto relative z-10 space-y-8 animate-fade-in-up">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold text-white/90 border border-white/10"
-                 style={{ background: 'rgba(255, 255, 255, 0.04)' }}>
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span>Next-Gen Event Management Platform</span>
+      <main className="flex-1">
+        {/* Hero */}
+        <section className="py-20 lg:py-28 px-6 lg:px-10">
+          <div className="max-w-5xl mx-auto text-center">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-teal-50 border border-teal-100 text-teal-700 text-xs font-semibold mb-8">
+              Now in public beta
             </div>
-            
-            <h1 className="text-5xl md:text-7xl font-extrabold text-white tracking-tight leading-none">
-              Forge Unforgettable <br />
-              <span className="ef-gradient-text">Event Experiences</span>
+            <h1 className="text-4xl md:text-6xl font-bold text-slate-900 tracking-tight leading-[1.1]">
+              The calm way to run
+              <br />
+              high-stakes events
             </h1>
-
-            <p className="max-w-2xl mx-auto text-base md:text-lg leading-relaxed text-slate-300 font-light">
-              EventForge is a professional-grade SaaS empowering planners, organizers, and enterprises to coordinate high-density physical and virtual events, complete with ticketing, analytics, live polling, and check-ins.
+            <p className="mt-6 text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+              EventForge helps organizers sell tickets, manage registrations, scan attendees, and run live polls — all in one place. Built for teams that need reliability under pressure.
             </p>
-
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-              <Link href="/login" className="ef-btn-primary text-base px-8 py-3.5 shadow-lg w-full sm:w-auto">
-                Get Started for Free
+            <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link href="/login" className="ef-btn-primary text-base px-7 py-3.5 w-full sm:w-auto">
+                Start for free
               </Link>
-              <Link href="/login" className="ef-btn-secondary text-base px-8 py-3.5 border-white/15 bg-white/5 text-white hover:bg-white/10 w-full sm:w-auto">
-                Explore Demo Console
+              <Link href="/login" className="ef-btn-secondary text-base px-7 py-3.5 w-full sm:w-auto">
+                View demo dashboard
               </Link>
-            </div>
-
-            {/* Mock stats bar */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-16 max-w-3xl mx-auto border-t border-white/10 text-white">
-              <div>
-                <p className="text-3xl font-extrabold text-white">99.9%</p>
-                <p className="text-xs text-slate-400 mt-1 font-medium">Uptime Guarantee</p>
-              </div>
-              <div>
-                <p className="text-3xl font-extrabold text-white">1.2M+</p>
-                <p className="text-xs text-slate-400 mt-1 font-medium">Tickets Processed</p>
-              </div>
-              <div>
-                <p className="text-3xl font-extrabold text-white">20K+</p>
-                <p className="text-xs text-slate-400 mt-1 font-medium">Events Hosted</p>
-              </div>
-              <div>
-                <p className="text-3xl font-extrabold text-white">&lt; 1s</p>
-                <p className="text-xs text-slate-400 mt-1 font-medium">QR Check-in Latency</p>
-              </div>
             </div>
           </div>
         </section>
 
-        {/* ─── Features Grid ─── */}
-        <section className="py-20 px-8 max-w-6xl mx-auto w-full">
-          <div className="text-center mb-16 space-y-3">
-            <h2 className="ef-headline-lg text-3xl font-bold">Comprehensive Tools for Every Stage</h2>
-            <p className="text-slate-500 max-w-xl mx-auto">
-              From initial ticketing registration to real-time day-of-event operations, EventForge handles the details so you can focus on building connections.
-            </p>
+        {/* Stats */}
+        <section className="border-y border-slate-200 bg-white">
+          <div className="max-w-5xl mx-auto px-6 lg:px-10 py-10">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+              {[
+                ['99.9%', 'Uptime guarantee'],
+                ['1.2M+', 'Tickets processed'],
+                ['20K+', 'Events hosted'],
+                ['< 1s', 'QR scan latency'],
+              ].map(([value, label]) => (
+                <div key={label}>
+                  <p className="text-2xl md:text-3xl font-bold text-slate-900">{value}</p>
+                  <p className="mt-1 text-xs font-medium text-slate-500 uppercase tracking-wide">{label}</p>
+                </div>
+              ))}
+            </div>
           </div>
+        </section>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Feature 1 */}
-            <div className="ef-card p-8 space-y-4 hover:shadow-md transition-all duration-200">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-indigo-50 text-indigo-600 font-bold text-lg">
-                🎟️
-              </div>
-              <h3 className="text-xl font-bold" style={{ color: 'var(--ef-text-primary)' }}>Multi-tier Ticketing</h3>
-              <p className="text-sm leading-relaxed" style={{ color: 'var(--ef-text-secondary)' }}>
-                Configure free or paid ticket tiers with quantity limits, custom pricing, and secure credit card checkout integrations powered by Stripe.
+        {/* Features */}
+        <section className="py-20 lg:py-24 px-6 lg:px-10">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-14">
+              <h2 className="text-2xl md:text-3xl font-bold text-slate-900">Everything you need to run an event</h2>
+              <p className="mt-3 text-slate-600 max-w-xl mx-auto">
+                From first ticket sold to final attendee check-out, EventForge keeps every moving part in sync.
               </p>
             </div>
 
-            {/* Feature 2 */}
-            <div className="ef-card p-8 space-y-4 hover:shadow-md transition-all duration-200">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-indigo-50 text-indigo-600 font-bold text-lg">
-                📊
-              </div>
-              <h3 className="text-xl font-bold" style={{ color: 'var(--ef-text-primary)' }}>Real-Time Insights</h3>
-              <p className="text-sm leading-relaxed" style={{ color: 'var(--ef-text-secondary)' }}>
-                Track registrations, check-in velocities, gross revenue metrics, and hourly audience trends from a single dashboard.
-              </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[
+                {
+                  title: 'Flexible ticketing',
+                  desc: 'Free or paid tiers, quantity limits, early-bird windows, and secure Stripe checkout.',
+                },
+                {
+                  title: 'Real-time analytics',
+                  desc: 'Track sales velocity, attendance, revenue, and engagement as your event unfolds.',
+                },
+                {
+                  title: 'Fast check-ins',
+                  desc: 'Scan QR codes from any device. No app install required for staff or attendees.',
+                },
+                {
+                  title: 'Live engagement',
+                  desc: 'Run polls, Q&A, and session RSVPs to keep your audience participating.',
+                },
+                {
+                  title: 'Team permissions',
+                  desc: 'Invite organizers, staff, and volunteers with role-based access control.',
+                },
+                {
+                  title: 'Public event pages',
+                  desc: 'Launch branded event microsites with schedules, speakers, and checkout.',
+                },
+              ].map((feature) => (
+                <div key={feature.title} className="ef-card p-6 ef-card-hover">
+                  <h3 className="text-base font-semibold text-slate-900">{feature.title}</h3>
+                  <p className="mt-2 text-sm text-slate-600 leading-relaxed">{feature.desc}</p>
+                </div>
+              ))}
             </div>
+          </div>
+        </section>
 
-            {/* Feature 3 */}
-            <div className="ef-card p-8 space-y-4 hover:shadow-md transition-all duration-200">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-indigo-50 text-indigo-600 font-bold text-lg">
-                📱
-              </div>
-              <h3 className="text-xl font-bold" style={{ color: 'var(--ef-text-primary)' }}>High-Speed Scanning</h3>
-              <p className="text-sm leading-relaxed" style={{ color: 'var(--ef-text-secondary)' }}>
-                Check in attendees instantly with our mobile QR code scanner. Zero installation required, optimized for direct hardware camera access.
-              </p>
-            </div>
+        {/* CTA */}
+        <section className="py-20 px-6 lg:px-10">
+          <div className="max-w-4xl mx-auto rounded-2xl bg-slate-900 px-8 py-14 text-center">
+            <h2 className="text-2xl md:text-3xl font-bold text-white">Ready to run your next event?</h2>
+            <p className="mt-3 text-slate-400 max-w-lg mx-auto">
+              Create a free account and start building your event in minutes. No credit card required.
+            </p>
+            <Link
+              href="/login"
+              className="inline-flex mt-8 items-center justify-center gap-2 px-7 py-3.5 rounded-lg bg-teal-500 text-white font-semibold text-sm hover:bg-teal-600 transition-colors"
+            >
+              Create your free account
+            </Link>
           </div>
         </section>
       </main>
 
-      {/* ─── Footer ─── */}
-      <footer className="py-12 px-8 bg-slate-900 text-slate-400 border-t border-slate-800">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-3">
-            <div className="w-7 h-7 rounded-lg flex items-center justify-center font-bold text-white text-sm"
-                 style={{ background: 'var(--ef-primary-gradient)' }}>
-              EF
-            </div>
-            <span className="font-bold text-white text-base">EventForge</span>
+      {/* Footer */}
+      <footer className="border-t border-slate-200 bg-white py-10 px-6 lg:px-10">
+        <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex items-center gap-2.5">
+            <Image src="/logo-icon.svg" alt="EventForge" width={28} height={28} />
+            <span className="font-bold text-slate-900">EventForge</span>
           </div>
-          <div className="flex gap-6 text-sm">
-            <Link href="#" className="hover:text-white transition-colors">Privacy Policy</Link>
-            <Link href="#" className="hover:text-white transition-colors">Terms of Service</Link>
-            <Link href="/login" className="hover:text-white transition-colors">Admin Console</Link>
+          <div className="flex gap-8 text-sm text-slate-500">
+            <Link href="/privacy" className="hover:text-slate-900 transition-colors">Privacy</Link>
+            <Link href="/terms" className="hover:text-slate-900 transition-colors">Terms</Link>
+            <Link href="/console" className="hover:text-slate-900 transition-colors">Console</Link>
           </div>
+          <p className="text-xs text-slate-400">
+            © {new Date().getFullYear()} EventForge. All rights reserved.
+          </p>
         </div>
       </footer>
     </div>

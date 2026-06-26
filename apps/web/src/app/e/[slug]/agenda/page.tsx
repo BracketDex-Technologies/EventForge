@@ -29,7 +29,7 @@ export default async function PublicAgendaPage({
 
   // Group by day
   const groupedSessions = sessions.reduce((acc, session) => {
-    const day = new Date(session.startsAt).toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
+    const day = new Date(session.startsAt).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
     if (!acc[day]) acc[day] = [];
     acc[day].push(session);
     return acc;
@@ -74,10 +74,10 @@ export default async function PublicAgendaPage({
                       {/* Timeline column */}
                       <div className="w-28 flex-shrink-0 text-xs font-semibold border-b sm:border-b-0 sm:border-r border-slate-50 pb-2 sm:pb-0 sm:pr-4" style={{ color: 'var(--ef-text-secondary)' }}>
                         <p className="text-slate-900 font-bold">
-                          {new Date(session.startsAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          {new Date(session.startsAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
                         </p>
                         <p className="text-[10px]" style={{ color: 'var(--ef-text-muted)' }}>
-                          to {new Date(session.endsAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          to {new Date(session.endsAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
                         </p>
                       </div>
 

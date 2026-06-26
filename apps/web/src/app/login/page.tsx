@@ -2,6 +2,8 @@
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
 
 export default function LoginPage() {
@@ -28,7 +30,7 @@ export default function LoginPage() {
           ? { email, password, displayName } 
           : { email, password };
 
-        const res = await fetch(endpoint, {
+        let res = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
@@ -36,12 +38,28 @@ export default function LoginPage() {
 
         if (!res.ok) {
           const errData = await res.json().catch(() => ({}));
-          throw new Error(errData.message || 'Authentication failed. Please check your credentials.');
+          const msg = errData.message || '';
+          
+          if (isSignUp && (msg.toLowerCase().includes('already registered') || msg.toLowerCase().includes('already exists'))) {
+            // User exists, fallback to sign in
+            const signInRes = await fetch(`${apiUrl}/v1/auth/sign-in`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email, password }),
+            });
+            
+            if (!signInRes.ok) {
+              const signInErr = await signInRes.json().catch(() => ({}));
+              throw new Error('Account exists, but password was incorrect. Please sign in with the correct password.');
+            }
+            res = signInRes;
+          } else {
+            throw new Error(msg || 'Authentication failed. Please check your credentials.');
+          }
         }
 
         const data = await res.json();
         
-        // Sync tokens with Supabase browser client to write auth cookies
         const supabase = createClient();
         const { error: sessionError } = await supabase.auth.setSession({
           access_token: data.accessToken,
@@ -52,9 +70,7 @@ export default function LoginPage() {
           throw sessionError;
         }
 
-        // Navigate to console dashboard
-        router.push('/console');
-        router.refresh();
+        window.location.href = '/console';
       } catch (err: any) {
         setError(err.message || 'An unexpected error occurred.');
       }
@@ -62,54 +78,67 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden"
-         style={{ background: 'linear-gradient(135deg, #0f1629 0%, #1a1f3a 50%, #0f1629 100%)' }}>
-      {/* Animated dot pattern background */}
-      <div className="absolute inset-0 ef-dot-pattern opacity-40" />
-      
-      {/* Subtle radial glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-20"
-           style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.3) 0%, transparent 70%)' }} />
+    <div className="min-h-screen flex">
+      {/* Left side - brand panel */}
+      <div className="hidden lg:flex lg:w-1/2 bg-slate-900 flex-col justify-between p-12 relative overflow-hidden">
+        <div className="relative z-10">
+          <Link href="/" className="inline-flex items-center gap-3">
+            <Image src="/logo-icon.svg" alt="EventForge" width={36} height={36} />
+            <span className="text-white font-bold text-xl tracking-tight">EventForge</span>
+          </Link>
+        </div>
 
-      {/* Login Card */}
-      <div className="relative z-10 w-full max-w-md mx-auto px-6 animate-fade-in-up">
-        <div className="bg-white rounded-2xl p-12"
-             style={{ boxShadow: '0 25px 60px rgba(0,0,0,0.3), 0 0 40px rgba(99,102,241,0.1)' }}>
-          {/* Logo */}
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center gap-2.5 mb-3">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-lg"
-                   style={{ background: 'var(--ef-primary-gradient)' }}>
-                E
-              </div>
-              <span className="text-2xl font-bold tracking-tight ef-gradient-text">
-                EventForge
-              </span>
-            </div>
-            <p className="text-[14px]" style={{ color: 'var(--ef-text-muted)' }}>
-              {isSignUp ? 'Create your organizer account' : 'Sign in to your console'}
+        <div className="relative z-10 max-w-md">
+          <blockquote className="text-2xl font-medium text-white leading-relaxed">
+            "The most intuitive platform we've used to manage ticket sales and attendee check-ins at scale."
+          </blockquote>
+          <p className="mt-6 text-slate-400 text-sm">
+            Trusted by event organizers, conferences, and venues worldwide.
+          </p>
+        </div>
+
+        <div className="relative z-10 text-xs text-slate-500">
+          © {new Date().getFullYear()} EventForge. All rights reserved.
+        </div>
+
+        {/* Subtle background texture */}
+        <div className="absolute inset-0 opacity-[0.03]" style={{
+          backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)',
+          backgroundSize: '32px 32px'
+        }} />
+      </div>
+
+      {/* Right side - auth form */}
+      <div className="flex-1 flex items-center justify-center p-6 sm:p-12 bg-slate-50">
+        <div className="w-full max-w-[420px]">
+          <div className="lg:hidden flex items-center justify-center gap-3 mb-10">
+            <Image src="/logo-icon.svg" alt="EventForge" width={36} height={36} />
+            <span className="font-bold text-xl tracking-tight text-slate-900">EventForge</span>
+          </div>
+
+          <div className="mb-8">
+            <h1 className="text-2xl font-bold text-slate-900">
+              {isSignUp ? 'Create your account' : 'Sign in to your account'}
+            </h1>
+            <p className="mt-2 text-sm text-slate-500">
+              {isSignUp 
+                ? 'Start managing your events in minutes.' 
+                : 'Welcome back. Enter your details to continue.'}
             </p>
           </div>
 
-          <div className="h-px mb-8" style={{ background: 'var(--ef-border)' }} />
-
-          {/* Error Message */}
           {error && (
-            <div className="mb-6 p-4 rounded-xl text-sm border flex items-start gap-2.5 animate-shake"
-                 style={{ backgroundColor: '#fef2f2', borderColor: '#fca5a5', color: '#b91c1c' }}>
-              <svg className="w-5 h-5 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-              </svg>
-              <span>{error}</span>
+            <div className="mb-6 p-4 rounded-lg bg-red-50 border border-red-100 text-sm text-red-700">
+              {error}
             </div>
           )}
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
             {isSignUp && (
-              <div className="animate-fade-in-up">
-                <label className="ef-label">Full Name</label>
+              <div>
+                <label htmlFor="name" className="ef-label">Full name</label>
                 <input
+                  id="name"
                   type="text"
                   required
                   placeholder="Alex Johnson"
@@ -120,9 +149,11 @@ export default function LoginPage() {
                 />
               </div>
             )}
+
             <div>
-              <label className="ef-label">Email Address</label>
+              <label htmlFor="email" className="ef-label">Email address</label>
               <input
+                id="email"
                 type="email"
                 required
                 placeholder="you@company.com"
@@ -132,51 +163,35 @@ export default function LoginPage() {
                 disabled={isPending}
               />
             </div>
+
             <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="ef-label mb-0">Password</label>
-                {!isSignUp && (
-                  <a href="#" className="text-[12px] font-medium" style={{ color: 'var(--ef-primary)' }}>
-                    Forgot password?
-                  </a>
-                )}
-              </div>
+              <label htmlFor="password" className="ef-label">Password</label>
               <input
+                id="password"
                 type="password"
                 required
                 placeholder="••••••••"
+                minLength={8}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="ef-input"
                 disabled={isPending}
               />
+              {isSignUp && (
+                <p className="mt-1.5 text-xs text-slate-400">Must be at least 8 characters.</p>
+              )}
             </div>
+
             <button
               type="submit"
               disabled={isPending}
-              className="w-full py-3 px-6 rounded-full text-white font-semibold text-[15px] transition-all duration-200 cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
-              style={{
-                background: 'var(--ef-primary-gradient)',
-                boxShadow: 'var(--ef-shadow-sm)',
-                border: '1px solid rgba(255,255,255,0.1)',
-              }}
+              className="w-full ef-btn-primary py-3 disabled:opacity-60"
             >
-              {isPending ? (
-                <>
-                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                  </svg>
-                  Processing...
-                </>
-              ) : (
-                isSignUp ? 'Sign Up' : 'Sign In'
-              )}
+              {isPending ? 'Processing...' : isSignUp ? 'Create account' : 'Sign in'}
             </button>
           </form>
 
-          {/* Footer link */}
-          <p className="text-center mt-8 text-[13px]" style={{ color: 'var(--ef-text-secondary)' }}>
+          <p className="mt-8 text-center text-sm text-slate-500">
             {isSignUp ? 'Already have an account? ' : "Don't have an account? "}
             <button
               type="button"
@@ -184,20 +199,12 @@ export default function LoginPage() {
                 setError(null);
                 setIsSignUp(!isSignUp);
               }}
-              className="font-semibold hover:underline focus:outline-none cursor-pointer"
-              style={{ color: 'var(--ef-primary)' }}
+              className="font-semibold text-slate-900 hover:underline"
             >
               {isSignUp ? 'Sign in' : 'Sign up'}
             </button>
           </p>
         </div>
-      </div>
-
-      {/* Page footer */}
-      <div className="relative z-10 mt-8 text-center">
-        <p className="text-[12px]" style={{ color: 'rgba(255,255,255,0.3)' }}>
-          EventForge v1.0 — <a href="#" className="hover:text-white/50 transition-colors">Privacy</a> · <a href="#" className="hover:text-white/50 transition-colors">Terms</a>
-        </p>
       </div>
     </div>
   );

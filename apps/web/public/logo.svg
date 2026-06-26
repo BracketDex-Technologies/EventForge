@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 40" fill="none">
+  <rect x="0" y="0" width="40" height="40" rx="10" fill="#0F172A"/>
+  <path d="M11 15C11 12.7909 12.7909 11 15 11H25C27.2091 11 29 12.7909 29 15V17C29 17.5523 28.5523 18 28 18H25C24.4477 18 24 18.4477 24 19V23C24 23.5523 24.4477 24 25 24H28C28.5523 24 29 24.4477 29 25V27C29 29.2091 27.2091 31 25 31H15C12.7909 31 11 29.2091 11 27V25C11 24.4477 11.4477 24 12 24H15C15.5523 24 16 23.5523 16 23V19C16 18.4477 15.5523 18 15 18H12C11.4477 18 11 17.5523 11 17V15Z" fill="white"/>
+  <circle cx="30" cy="10" r="3.5" fill="#14B8A6"/>
+  <text x="48" y="27" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700" fill="#0F172A">EventForge</text>
+</svg>

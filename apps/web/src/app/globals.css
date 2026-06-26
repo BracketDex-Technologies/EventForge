@@ -1,58 +1,50 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 /* ─── EventForge Design System ─── */
 :root {
-  /* Primary Palette */
-  --ef-primary: #4648d4;
-  --ef-primary-container: #6063ee;
-  --ef-primary-gradient: linear-gradient(135deg, #6366f1 0%, #4648d4 50%, #3b82f6 100%);
-  --ef-primary-gradient-hover: linear-gradient(135deg, #818cf8 0%, #5b5eda 50%, #60a5fa 100%);
+  /* Brand */
+  --ef-brand: #0F1629;
+  --ef-brand-light: #1E293B;
+  --ef-accent: #4F46E5;
+  --ef-accent-dark: #4338CA;
+  --ef-accent-subtle: #EEF2FF;
 
   /* Surfaces */
-  --ef-bg: #f8fafc;
-  --ef-surface: #ffffff;
-  --ef-surface-hover: #f8fafc;
-  --ef-surface-container: #f1f5f9;
-  --ef-surface-container-high: #e2e8f0;
-
-  /* Dark Sidebar */
-  --ef-sidebar: #0f1629;
-  --ef-sidebar-hover: rgba(255, 255, 255, 0.06);
-  --ef-sidebar-active: rgba(255, 255, 255, 0.1);
-  --ef-sidebar-text: rgba(255, 255, 255, 0.6);
-  --ef-sidebar-text-active: #ffffff;
+  --ef-bg: #F8FAFC;
+  --ef-surface: #FFFFFF;
+  --ef-surface-hover: #F1F5F9;
+  --ef-surface-raised: #FFFFFF;
 
   /* Text */
-  --ef-text-primary: #0f172a;
+  --ef-text-primary: #0F172A;
   --ef-text-secondary: #475569;
-  --ef-text-muted: #94a3b8;
-  --ef-text-on-primary: #ffffff;
+  --ef-text-muted: #94A3B8;
+  --ef-text-on-dark: #F8FAFC;
 
   /* Borders */
-  --ef-border: #e2e8f0;
-  --ef-border-subtle: #f1f5f9;
+  --ef-border: #E2E8F0;
+  --ef-border-strong: #CBD5E1;
 
   /* Status */
   --ef-success: #059669;
-  --ef-success-bg: #ecfdf5;
-  --ef-success-text: #065f46;
-  --ef-info: #2563eb;
-  --ef-info-bg: #eff6ff;
-  --ef-info-text: #1e40af;
-  --ef-warning: #d97706;
-  --ef-warning-bg: #fffbeb;
-  --ef-warning-text: #92400e;
-  --ef-danger: #dc2626;
-  --ef-danger-bg: #fef2f2;
-  --ef-danger-text: #991b1b;
+  --ef-success-bg: #ECFDF5;
+  --ef-success-text: #065F46;
+  --ef-info: #2563EB;
+  --ef-info-bg: #EFF6FF;
+  --ef-info-text: #1E40AF;
+  --ef-warning: #D97706;
+  --ef-warning-bg: #FFFBEB;
+  --ef-warning-text: #92400E;
+  --ef-danger: #DC2626;
+  --ef-danger-bg: #FEF2F2;
+  --ef-danger-text: #991B1B;
 
   /* Elevation */
-  --ef-shadow-sm: 0px 1px 3px rgba(15, 22, 41, 0.04), 0px 1px 2px rgba(15, 22, 41, 0.02);
-  --ef-shadow: 0px 4px 20px rgba(15, 22, 41, 0.05);
-  --ef-shadow-md: 0px 8px 24px rgba(15, 22, 41, 0.08);
-  --ef-shadow-lg: 0px 12px 32px rgba(15, 22, 41, 0.12);
-  --ef-shadow-glow: 0px 0px 20px rgba(99, 102, 241, 0.25);
+  --ef-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --ef-shadow: 0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --ef-shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  --ef-shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
 
   /* Spacing */
   --ef-space-xs: 4px;
@@ -65,18 +57,16 @@
   /* Radius */
   --ef-radius-sm: 6px;
   --ef-radius: 8px;
-  --ef-radius-md: 12px;
-  --ef-radius-lg: 16px;
-  --ef-radius-xl: 20px;
-  --ef-radius-full: 9999px;
+  --ef-radius-md: 10px;
+  --ef-radius-lg: 12px;
+  --ef-radius-xl: 16px;
 
   /* Transitions */
-  --ef-transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
-  --ef-transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --ef-transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
 
   /* Legacy compatibility */
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  --background: #F8FAFC;
+  --foreground: #0F172A;
 }
 
 @theme inline {
@@ -103,65 +93,62 @@ body {
 /* ─── Scrollbar ─── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
 
 /* ─── Typography ─── */
 .ef-headline-xl {
-  font-family: 'Inter', sans-serif;
   font-size: 36px;
   font-weight: 700;
-  line-height: 44px;
+  line-height: 1.15;
   letter-spacing: -0.02em;
   color: var(--ef-text-primary);
 }
 
 .ef-headline-lg {
-  font-family: 'Inter', sans-serif;
-  font-size: 24px;
-  font-weight: 600;
-  line-height: 32px;
-  letter-spacing: -0.01em;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
   color: var(--ef-text-primary);
 }
 
 .ef-headline-md {
-  font-family: 'Inter', sans-serif;
   font-size: 20px;
   font-weight: 600;
-  line-height: 28px;
+  line-height: 1.3;
   color: var(--ef-text-primary);
 }
 
 .ef-body-lg {
-  font-family: 'Inter', sans-serif;
   font-size: 16px;
   font-weight: 400;
-  line-height: 24px;
+  line-height: 1.6;
+  color: var(--ef-text-secondary);
 }
 
 .ef-body-md {
-  font-family: 'Inter', sans-serif;
   font-size: 14px;
   font-weight: 400;
-  line-height: 20px;
+  line-height: 1.6;
+  color: var(--ef-text-secondary);
 }
 
 .ef-label-md {
-  font-family: 'Inter', sans-serif;
   font-size: 12px;
-  font-weight: 500;
-  line-height: 16px;
+  font-weight: 600;
+  line-height: 1.4;
   letter-spacing: 0.01em;
+  color: var(--ef-text-secondary);
 }
 
 .ef-label-sm {
-  font-family: 'Inter', sans-serif;
   font-size: 11px;
   font-weight: 600;
-  line-height: 14px;
-  letter-spacing: 0.05em;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
+  color: var(--ef-text-muted);
 }
 
 /* ─── Components: Buttons ─── */
@@ -170,22 +157,21 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 10px 24px;
-  background: var(--ef-primary-gradient);
+  padding: 10px 20px;
+  background: var(--ef-brand);
   color: white;
   font-weight: 600;
   font-size: 14px;
-  border-radius: var(--ef-radius-full);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--ef-radius);
+  border: 1px solid var(--ef-brand);
   cursor: pointer;
   transition: all var(--ef-transition);
   box-shadow: var(--ef-shadow-sm);
 }
 
 .ef-btn-primary:hover {
-  background: var(--ef-primary-gradient-hover);
-  box-shadow: var(--ef-shadow-glow);
-  transform: translateY(-1px);
+  background: var(--ef-brand-light);
+  border-color: var(--ef-brand-light);
 }
 
 .ef-btn-secondary {
@@ -193,12 +179,12 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 10px 24px;
+  padding: 10px 20px;
   background: var(--ef-surface);
   color: var(--ef-text-primary);
   font-weight: 500;
   font-size: 14px;
-  border-radius: var(--ef-radius-full);
+  border-radius: var(--ef-radius);
   border: 1px solid var(--ef-border);
   cursor: pointer;
   transition: all var(--ef-transition);
@@ -206,15 +192,36 @@ body {
 
 .ef-btn-secondary:hover {
   background: var(--ef-surface-hover);
-  border-color: #cbd5e1;
+  border-color: var(--ef-border-strong);
+}
+
+.ef-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: transparent;
+  color: var(--ef-text-secondary);
+  font-weight: 500;
+  font-size: 14px;
+  border-radius: var(--ef-radius);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all var(--ef-transition);
+}
+
+.ef-btn-ghost:hover {
+  background: var(--ef-surface-hover);
+  color: var(--ef-text-primary);
 }
 
 /* ─── Components: Cards ─── */
 .ef-card {
   background: var(--ef-surface);
-  border-radius: var(--ef-radius-md);
+  border-radius: var(--ef-radius-lg);
   box-shadow: var(--ef-shadow);
-  border: 1px solid var(--ef-border-subtle);
+  border: 1px solid var(--ef-border);
   overflow: hidden;
 }
 
@@ -224,7 +231,7 @@ body {
 
 .ef-card-hover:hover {
   box-shadow: var(--ef-shadow-md);
-  transform: translateY(-2px);
+  border-color: var(--ef-border-strong);
 }
 
 /* ─── Components: Inputs ─── */
@@ -242,8 +249,8 @@ body {
 }
 
 .ef-input:focus {
-  border-color: var(--ef-primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+  border-color: var(--ef-accent);
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.12);
 }
 
 .ef-input::placeholder { color: var(--ef-text-muted); }
@@ -260,11 +267,12 @@ body {
 .ef-badge {
   display: inline-flex;
   align-items: center;
-  padding: 2px 10px;
+  padding: 3px 10px;
   border-radius: var(--ef-radius-full);
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 
 .ef-badge-success {
@@ -283,33 +291,28 @@ body {
 }
 
 .ef-badge-neutral {
-  background: #f1f5f9;
+  background: #F1F5F9;
   color: #475569;
-}
-
-.ef-badge-purple {
-  background: #ede9fe;
-  color: #5b21b6;
 }
 
 /* ─── Components: Table ─── */
 .ef-table { width: 100%; border-collapse: separate; border-spacing: 0; }
 .ef-table th {
-  padding: 12px 24px;
+  padding: 12px 20px;
   text-align: left;
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   color: var(--ef-text-muted);
-  background: var(--ef-surface-container);
-  border-bottom: 1px solid var(--ef-border-subtle);
+  background: var(--ef-bg);
+  border-bottom: 1px solid var(--ef-border);
 }
 .ef-table td {
-  padding: 16px 24px;
+  padding: 14px 20px;
   font-size: 14px;
   color: var(--ef-text-primary);
-  border-bottom: 1px solid var(--ef-border-subtle);
+  border-bottom: 1px solid var(--ef-border);
 }
 .ef-table tbody tr {
   transition: background var(--ef-transition);
@@ -320,31 +323,12 @@ body {
 
 /* ─── Animations ─── */
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes slideInLeft {
-  from { opacity: 0; transform: translateX(-16px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
-  50% { box-shadow: 0 0 20px 4px rgba(99, 102, 241, 0.15); }
-}
-
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
 .animate-fade-in-up {
-  animation: fadeInUp 0.4s ease-out both;
-}
-
-.animate-slide-in-left {
-  animation: slideInLeft 0.3s ease-out both;
+  animation: fadeInUp 0.3s ease-out both;
 }
 
 /* Stagger delays */
@@ -352,17 +336,3 @@ body {
 .delay-200 { animation-delay: 0.2s; }
 .delay-300 { animation-delay: 0.3s; }
 .delay-400 { animation-delay: 0.4s; }
-
-/* ─── Gradient text utility ─── */
-.ef-gradient-text {
-  background: var(--ef-primary-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* ─── Dot pattern background ─── */
-.ef-dot-pattern {
-  background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
-  background-size: 24px 24px;
-}
