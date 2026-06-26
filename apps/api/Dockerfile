@@ -11,8 +11,10 @@ COPY packages/domain/package.json ./packages/domain/
 COPY packages/config/package.json ./packages/config/
 COPY packages/api-sdk/package.json ./packages/api-sdk/
 COPY apps/api/package.json ./apps/api/
+COPY apps/web/package.json ./apps/web/
+COPY apps/workers/package.json ./apps/workers/
 
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --ignore-scripts
 
 # ── Stage 2: Build ─────────────────────────────────────────────
 FROM node:20-alpine AS builder
