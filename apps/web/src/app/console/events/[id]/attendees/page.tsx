@@ -18,17 +18,6 @@ export default async function AttendeesPage({
   const attendees = await prisma.attendeeProfile.findMany({
     where: { eventId: id },
     orderBy: { createdAt: 'desc' },
-    include: {
-      event: {
-        select: {
-          tickets: {
-            where: {
-              status: 'valid' // Only consider active tickets
-            }
-          }
-        }
-      }
-    }
   });
 
   return (
