@@ -1,40 +1,158 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
 
 export default function PrivacyPage() {
+  const sections = [
+    { id: 'collect', title: '1. Information We Collect' },
+    { id: 'use', title: '2. How We Use Information' },
+    { id: 'legal', title: '3. Legal Bases for Processing' },
+    { id: 'retention', title: '4. Data Retention & Security' },
+    { id: 'rights', title: '5. Your Privacy Rights' },
+    { id: 'third-party', title: '6. Third-Party Integrations' },
+    { id: 'changes', title: '7. Policy Updates' },
+  ];
+
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50">
+    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800 font-sans">
+      {/* Header */}
       <header className="w-full py-4 px-6 lg:px-10 flex items-center justify-between sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
-        <Link href="/" className="inline-flex items-center gap-2.5">
+        <Link href="/" className="inline-flex items-center gap-2.5 group">
           <Image src="/logo-icon.svg" alt="EventForge" width={32} height={32} />
           <span className="font-bold text-lg tracking-tight text-slate-900">EventForge</span>
         </Link>
-        <Link href="/login" className="ef-btn-ghost text-sm">
+        <Link href="/login" className="ef-btn-ghost text-sm py-2 px-4 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors">
           Return to Login
         </Link>
       </header>
       
-      <main className="flex-1 py-16 px-6 lg:px-10 max-w-4xl mx-auto w-full">
-        <h1 className="text-3xl font-bold text-slate-900 mb-8">Privacy Policy</h1>
-        <div className="prose prose-slate max-w-none text-slate-600">
-          <p>Last updated: {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
-          <h2>1. Information We Collect</h2>
-          <p>We collect information to provide better services to all our users. The information we collect, and how that information is used, depends on how you use our services.</p>
-          
-          <h2>2. How We Use Information</h2>
-          <p>We use the information we collect from all our services to provide, maintain, protect and improve them, to develop new ones, and to protect EventForge and our users.</p>
-          
-          <h2>3. Information We Share</h2>
-          <p>We do not share personal information with companies, organizations and individuals outside of EventForge unless one of the following circumstances applies: with your consent, for external processing, or for legal reasons.</p>
-          
-          <h2>4. Information Security</h2>
-          <p>We work hard to protect EventForge and our users from unauthorized access to or unauthorized alteration, disclosure or destruction of information we hold.</p>
-          
-          <h2>5. Changes</h2>
-          <p>Our Privacy Policy may change from time to time. We will not reduce your rights under this Privacy Policy without your explicit consent.</p>
-        </div>
-      </main>
+      {/* Main Content Layout */}
+      <div className="flex-1 max-w-6xl w-full mx-auto py-12 px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-4 gap-8">
+        
+        {/* Sidebar Navigation (Sticky) */}
+        <aside className="hidden lg:block lg:col-span-1">
+          <div className="sticky top-24 space-y-4 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+            <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">On This Page</h3>
+            <nav className="flex flex-col gap-2.5">
+              {sections.map((section) => (
+                <a
+                  key={section.id}
+                  href={`#${section.id}`}
+                  className="text-xs font-medium text-slate-500 hover:text-indigo-600 transition-colors"
+                >
+                  {section.title}
+                </a>
+              ))}
+            </nav>
+          </div>
+        </aside>
+
+        {/* Policy Body */}
+        <main className="col-span-1 lg:col-span-3 bg-white p-8 sm:p-12 rounded-2xl border border-slate-200 shadow-sm space-y-10">
+          <div>
+            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">Privacy Policy</h1>
+            <p className="text-sm text-slate-400">
+              Last updated: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+            </p>
+          </div>
+
+          <div className="prose prose-slate max-w-none text-sm text-slate-600 leading-relaxed space-y-6">
+            <p>
+              At EventForge, we prioritize the protection of your personal data. This Privacy Policy details how we collect, process, share, and protect your information when you use our event management workspace, registration pages, and check-in endpoints.
+            </p>
+
+            <hr className="border-slate-100 my-6" />
+
+            {/* Section 1 */}
+            <section id="collect" className="space-y-3 scroll-mt-24">
+              <h2 className="text-lg font-bold text-slate-900">{sections[0].title}</h2>
+              <p>We collect personal information that you provide to us directly, as well as data gathered automatically during your use of our platforms:</p>
+              <ul className="list-disc pl-5 space-y-2">
+                <li><strong>Account Credentials:</strong> Full name, corporate email address, and authentication passwords when organizing workspace profiles.</li>
+                <li><strong>Event Data:</strong> Event registration parameters, ticket tiers, sessions, agenda configurations, speaker details, and attendee check-in logs.</li>
+                <li><strong>Billing Details:</strong> Payment card records processed securely via our billing agent (Stripe). We do not store raw card numbers.</li>
+                <li><strong>Device Information:</strong> IP address, browser descriptors, hardware IDs, and telemetry records generated by active connections.</li>
+              </ul>
+            </section>
+
+            {/* Section 2 */}
+            <section id="use" className="space-y-3 scroll-mt-24">
+              <h2 className="text-lg font-bold text-slate-900">{sections[1].title}</h2>
+              <p>We process collected information to fulfill core service operations and maintain system security:</p>
+              <ul className="list-disc pl-5 space-y-2">
+                <li>Provisioning organization workspaces and processing event registrations.</li>
+                <li>Generating secure attendee QR tickets and validating check-in logs on-site.</li>
+                <li>Tracking real-time ticket checkout analytics and revenue rollups.</li>
+                <li>Mitigating fraudulent transactions, spam signups, and service abuse.</li>
+              </ul>
+            </section>
+
+            {/* Section 3 */}
+            <section id="legal" className="space-y-3 scroll-mt-24">
+              <h2 className="text-lg font-bold text-slate-900">{sections[2].title}</h2>
+              <p>Our processing legal bases depend on data contexts under General Data Protection Regulation (GDPR) guidelines:</p>
+              <ul className="list-disc pl-5 space-y-2">
+                <li><strong>Performance of Contract:</strong> Fulfilling ticket orders, processing check-ins, and maintaining team access permissions.</li>
+                <li><strong>Consent:</strong> Sending email campaigns, newsletters, and promotional alerts (which can be revoked at any time).</li>
+                <li><strong>Legitimate Interests:</strong> Optimizing system security and processing analytics telemetry.</li>
+              </ul>
+            </section>
+
+            {/* Section 4 */}
+            <section id="retention" className="space-y-3 scroll-mt-24">
+              <h2 className="text-lg font-bold text-slate-900">{sections[3].title}</h2>
+              <p>
+                We store your personal data only as long as your workspace account remains active or as needed to comply with legal tax reporting. Personal records are securely deleted or anonymized upon workspace deletion requests.
+              </p>
+              <p>
+                To secure records, we enforce database Row Level Security (RLS) policies, encrypt transaction tokens, and utilize industry-standard Transport Layer Security (TLS) configurations.
+              </p>
+            </section>
+
+            {/* Section 5 */}
+            <section id="rights" className="space-y-3 scroll-mt-24">
+              <h2 className="text-lg font-bold text-slate-900">{sections[4].title}</h2>
+              <p>Depending on your jurisdiction (e.g. EU GDPR, California CCPA), you possess specific privacy rights:</p>
+              <ul className="list-disc pl-5 space-y-2">
+                <li><strong>Access & Portability:</strong> Request copies of your personal profile and registered attendee logs.</li>
+                <li><strong>Rectification:</strong> Correct inaccurate workspace profile details or organization settings.</li>
+                <li><strong>Erasure:</strong> Request the deletion of your account and personal identifiers from our active databases.</li>
+                <li><strong>Objection:</strong> Object to processing operations based on legitimate marketing interests.</li>
+              </ul>
+            </section>
+
+            {/* Section 6 */}
+            <section id="third-party" className="space-y-3 scroll-mt-24">
+              <h2 className="text-lg font-bold text-slate-900">{sections[5].title}</h2>
+              <p>We integrate with leading providers to handle billing, database management, and email infrastructure:</p>
+              <ul className="list-disc pl-5 space-y-2">
+                <li><strong>Supabase Auth & Database:</strong> User authentication and application data persistence.</li>
+                <li><strong>Stripe:</strong> Payment processing services.</li>
+                <li><strong>Resend / Postmark:</strong> Transactional event email dispatch.</li>
+              </ul>
+            </section>
+
+            {/* Section 7 */}
+            <section id="changes" className="space-y-3 scroll-mt-24">
+              <h2 className="text-lg font-bold text-slate-900">{sections[6].title}</h2>
+              <p>
+                We may modify this policy periodically to reflect changes in our backend configurations or global compliance policies. We will notify you of any material changes via your workspace console dashboard.
+              </p>
+            </section>
+
+            <hr className="border-slate-100 my-6" />
+
+            {/* Contact */}
+            <section className="space-y-2">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-400">Contact Privacy Team</h2>
+              <p>If you have any questions, contact us at: <span className="font-semibold text-slate-900">privacy@eventforge.app</span></p>
+            </section>
+          </div>
+        </main>
+      </div>
       
+      {/* Footer */}
       <footer className="border-t border-slate-200 bg-white py-10 px-6 lg:px-10">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-xs text-slate-400">

@@ -38,7 +38,7 @@ export default async function EventsPage() {
   };
 
   return (
-    <div className="p-8 max-w-6xl mx-auto space-y-6 animate-fade-in-up">
+    <div className="p-4 sm:p-8 max-w-6xl mx-auto space-y-6 animate-fade-in-up">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Events</h1>
@@ -68,49 +68,89 @@ export default async function EventsPage() {
             </p>
           </div>
         ) : (
-          <table className="ef-table">
-            <thead>
-              <tr>
-                <th>Event Name</th>
-                <th>Type</th>
-                <th>Status</th>
-                <th>Starts At</th>
-                <th className="text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
+          <>
+            {/* Desktop Table View */}
+            <table className="ef-table hidden md:table">
+              <thead>
+                <tr>
+                  <th>Event Name</th>
+                  <th>Type</th>
+                  <th>Status</th>
+                  <th>Starts At</th>
+                  <th className="text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {events.map((event) => (
+                  <tr key={event.id}>
+                    <td className="font-semibold text-slate-900">
+                      {event.name}
+                    </td>
+                    <td className="capitalize text-slate-600">
+                      {event.type.replace('_', ' ')}
+                    </td>
+                    <td>
+                      {getStatusBadge(event.status)}
+                    </td>
+                    <td className="text-slate-600">
+                      {event.startsAt ? new Date(event.startsAt).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric'
+                      }) : <span className="text-slate-400">TBD</span>}
+                    </td>
+                    <td className="text-right">
+                      <div className="flex items-center justify-end gap-3">
+                        <Link href={`/console/events/${event.id}`} className="ef-btn-secondary text-xs px-3 py-1.5">
+                          Manage
+                        </Link>
+                        <Link href={`/e/${event.id}`} target="_blank" className="text-xs font-medium text-indigo-600 hover:text-indigo-700">
+                          View ↗
+                        </Link>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {/* Mobile Card List View */}
+            <div className="md:hidden divide-y divide-slate-100">
               {events.map((event) => (
-                <tr key={event.id}>
-                  <td className="font-semibold text-slate-900">
-                    {event.name}
-                  </td>
-                  <td className="capitalize text-slate-600">
-                    {event.type.replace('_', ' ')}
-                  </td>
-                  <td>
+                <div key={event.id} className="p-5 space-y-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="space-y-0.5">
+                      <h3 className="font-bold text-slate-900 text-sm leading-snug">{event.name}</h3>
+                      <p className="text-xs text-slate-500 capitalize">{event.type.replace('_', ' ')}</p>
+                    </div>
                     {getStatusBadge(event.status)}
-                  </td>
-                  <td className="text-slate-600">
-                    {event.startsAt ? new Date(event.startsAt).toLocaleDateString('en-US', {
-                      month: 'short',
-                      day: 'numeric',
-                      year: 'numeric'
-                    }) : <span className="text-slate-400">TBD</span>}
-                  </td>
-                  <td className="text-right">
-                    <div className="flex items-center justify-end gap-3">
-                      <Link href={`/console/events/${event.id}`} className="ef-btn-secondary text-xs px-3 py-1.5">
+                  </div>
+                  
+                  <div className="flex items-center justify-between text-xs text-slate-500 pt-1">
+                    <div>
+                      <span className="font-medium text-slate-400">Starts: </span>
+                      <span className="text-slate-700 font-semibold">
+                        {event.startsAt ? new Date(event.startsAt).toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                          year: 'numeric'
+                        }) : 'TBD'}
+                      </span>
+                    </div>
+                    
+                    <div className="flex items-center gap-3">
+                      <Link href={`/e/${event.id}`} target="_blank" className="text-indigo-600 font-semibold hover:underline">
+                        Preview ↗
+                      </Link>
+                      <Link href={`/console/events/${event.id}`} className="px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 font-semibold text-xs hover:bg-indigo-100 transition-colors">
                         Manage
                       </Link>
-                      <Link href={`/e/${event.id}`} target="_blank" className="text-xs font-medium text-indigo-600 hover:text-indigo-700">
-                        View ↗
-                      </Link>
                     </div>
-                  </td>
-                </tr>
+                  </div>
+                </div>
               ))}
-            </tbody>
-          </table>
+            </div>
+          </>
         )}
       </div>
     </div>

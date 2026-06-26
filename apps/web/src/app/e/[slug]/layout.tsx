@@ -2,6 +2,53 @@ import { prisma } from '@eventforge/db';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import type { Metadata } from 'next';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug);
+
+  const event = await prisma.event.findFirst({
+    where: isUuid ? { id: slug, deletedAt: null } : { id: slug, deletedAt: null },
+    include: {
+      locales: { where: { locale: 'en' } }
+    }
+  });
+
+  if (!event) return {};
+
+  const localeData = event.locales[0];
+  const title = localeData?.title || event.name;
+  const description = localeData?.summary || `Join us for ${event.name}. Plan, ticket, and run professional events with EventForge.`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      images: [
+        {
+          url: '/og-image.png',
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: ['/og-image.png'],
+    },
+  };
+}
 
 export default async function PublicEventLayout({
   children,
