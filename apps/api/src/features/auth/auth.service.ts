@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { SupabaseService } from '../../infrastructure/supabase/supabase.service.js';
 
 export interface SignUpInput {
@@ -31,7 +31,7 @@ export class AuthService {
       email_confirm: true,
     });
     if (error || !data.user) {
-      throw new Error(error?.message ?? 'Sign up failed');
+      throw new BadRequestException(error?.message ?? 'Sign up failed');
     }
     // Sign in to get tokens
     const { data: signInData, error: signInError } =
@@ -40,7 +40,7 @@ export class AuthService {
         password: input.password,
       });
     if (signInError || !signInData.session) {
-      throw new Error(signInError?.message ?? 'Sign in after signup failed');
+      throw new UnauthorizedException(signInError?.message ?? 'Sign in after signup failed');
     }
     return {
       accessToken: signInData.session.access_token,
@@ -59,7 +59,7 @@ export class AuthService {
       password: input.password,
     });
     if (error || !data.session) {
-      throw new Error(error?.message ?? 'Invalid credentials');
+      throw new UnauthorizedException(error?.message ?? 'Invalid credentials');
     }
     return {
       accessToken: data.session.access_token,
