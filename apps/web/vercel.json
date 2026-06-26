@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "framework": "nextjs",
+  "installCommand": "cd ../.. && pnpm install",
+  "buildCommand": "cd ../.. && pnpm --filter @eventforge/db db:generate && pnpm --filter web build",
+  "outputDirectory": ".next",
+  "rewrites": [
+    {
+      "source": "/api/v1/:path*",
+      "destination": "https://eventforge-api.onrender.com/v1/:path*"
+    }
+  ]
+}
