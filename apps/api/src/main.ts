@@ -46,8 +46,9 @@ async function bootstrap() {
   app.setGlobalPrefix(prefix);
 
   const corsOrigins = config.get<string>('corsOrigins', 'http://localhost:3000');
+  const origins = corsOrigins.split(',').map((o) => o.trim());
   app.enableCors({
-    origin: corsOrigins.split(',').map((o) => o.trim()),
+    origin: origins.length === 1 && origins[0] === '*' ? true : origins,
     credentials: true,
   });
 

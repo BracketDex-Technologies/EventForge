@@ -21,4 +21,4 @@ ENV NODE_ENV=production
 
 EXPOSE 4000
 
-CMD ["npx", "tsx", "apps/api/src/main.ts"]
+CMD ["node", "apps/api/dist/main.js"]
