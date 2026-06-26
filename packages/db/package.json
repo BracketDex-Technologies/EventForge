@@ -9,12 +9,12 @@
     "./client": "./src/client.ts"
   },
   "scripts": {
-    "db:generate": "dotenv -e ../../.env -- prisma generate",
-    "db:migrate": "dotenv -e ../../.env -- prisma migrate dev",
-    "db:migrate:deploy": "dotenv -e ../../.env -- prisma migrate deploy",
-    "db:push": "dotenv -e ../../.env -- prisma db push",
-    "db:seed": "dotenv -e ../../.env -- tsx prisma/seed.ts",
-    "db:studio": "dotenv -e ../../.env -- prisma studio",
+    "db:generate": "npx dotenv-cli -e ../../.env -- prisma generate",
+    "db:migrate": "npx dotenv-cli -e ../../.env -- prisma migrate dev",
+    "db:migrate:deploy": "npx dotenv-cli -e ../../.env -- prisma migrate deploy",
+    "db:push": "npx dotenv-cli -e ../../.env -- prisma db push",
+    "db:seed": "npx dotenv-cli -e ../../.env -- tsx prisma/seed.ts",
+    "db:studio": "npx dotenv-cli -e ../../.env -- prisma studio",
     "typecheck": "tsc --noEmit",
     "clean": "rimraf node_modules dist .prisma"
   },
