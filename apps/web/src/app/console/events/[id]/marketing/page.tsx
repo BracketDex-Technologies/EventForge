@@ -1,6 +1,8 @@
 import { prisma } from '@eventforge/db';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import CreateCampaignButton from './CreateCampaignButton';
+import CampaignRow from './CampaignRow';
 
 export default async function MarketingPage({
   params,
@@ -15,12 +17,22 @@ export default async function MarketingPage({
 
   if (!event) notFound();
 
-  // Mock campaigns
-  const campaigns = [
-    { id: '1', name: 'Early Bird Announcement', status: 'Sent', sentDate: '2023-10-15', opens: '45%', clicks: '12%' },
-    { id: '2', name: 'Speaker Lineup Reveal', status: 'Sent', sentDate: '2023-11-01', opens: '52%', clicks: '18%' },
-    { id: '3', name: 'Last Chance to Register', status: 'Draft', sentDate: null, opens: '-', clicks: '-' },
-  ];
+  // Query actual campaigns
+  const campaigns = await prisma.campaign.findMany({
+    where: { eventId: id },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  // Calculate campaign statistics
+  const sentCampaigns = campaigns.filter((c) => c.status === 'sent');
+  const totalSent = sentCampaigns.reduce((acc, c) => acc + c.recipientCount, 0);
+
+  const totalOpens = sentCampaigns.reduce((acc, c) => acc + c.openCount, 0);
+  const totalClicks = sentCampaigns.reduce((acc, c) => acc + c.clickCount, 0);
+  const totalRecipients = sentCampaigns.reduce((acc, c) => acc + c.recipientCount, 0);
+
+  const avgOpenRate = totalRecipients > 0 ? (totalOpens / totalRecipients) * 100 : 0;
+  const avgClickRate = totalRecipients > 0 ? (totalClicks / totalRecipients) * 100 : 0;
 
   return (
     <div className="space-y-6 max-w-6xl">
@@ -35,31 +47,26 @@ export default async function MarketingPage({
           <p className="mt-1 text-sm text-slate-500">Communicate with your attendees and promote your event.</p>
         </div>
         <div className="flex items-center gap-3 animate-fade-in-up">
-          <button className="ef-btn-primary">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-            </svg>
-            Create Campaign
-          </button>
+          <CreateCampaignButton eventId={id} />
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 animate-fade-in-up delay-100">
         <div className="ef-card p-4">
           <p className="text-sm font-medium text-slate-500">Total Sent Emails</p>
-          <h3 className="text-2xl font-bold text-slate-900 mt-1">2,450</h3>
+          <h3 className="text-2xl font-bold text-slate-900 mt-1">{totalSent.toLocaleString()}</h3>
         </div>
         <div className="ef-card p-4">
           <p className="text-sm font-medium text-slate-500">Avg. Open Rate</p>
-          <h3 className="text-2xl font-bold text-slate-900 mt-1">48.5%</h3>
+          <h3 className="text-2xl font-bold text-slate-900 mt-1">{avgOpenRate.toFixed(1)}%</h3>
         </div>
         <div className="ef-card p-4">
           <p className="text-sm font-medium text-slate-500">Avg. Click Rate</p>
-          <h3 className="text-2xl font-bold text-slate-900 mt-1">15.2%</h3>
+          <h3 className="text-2xl font-bold text-slate-900 mt-1">{avgClickRate.toFixed(1)}%</h3>
         </div>
       </div>
 
-      <div className="ef-card animate-fade-in-up delay-200">
+      <div className="ef-card animate-fade-in-up delay-200 overflow-hidden">
         {campaigns.length === 0 ? (
           <div className="p-16 text-center">
             <div className="w-14 h-14 rounded-xl mx-auto mb-4 bg-slate-100 text-slate-500 flex items-center justify-center">
@@ -76,42 +83,17 @@ export default async function MarketingPage({
           <table className="ef-table">
             <thead>
               <tr>
-                <th>Campaign Name</th>
-                <th>Status</th>
-                <th>Sent Date</th>
-                <th>Opens</th>
-                <th>Clicks</th>
-                <th className="text-right">Actions</th>
+                <th className="py-3 px-6 text-left">Campaign Name</th>
+                <th className="py-3 px-6 text-left">Status</th>
+                <th className="py-3 px-6 text-left">Sent / Scheduled Date</th>
+                <th className="py-3 px-6 text-left">Opens</th>
+                <th className="py-3 px-6 text-left">Clicks</th>
+                <th className="py-3 px-6 text-right">Actions</th>
               </tr>
             </thead>
             <tbody>
               {campaigns.map((campaign) => (
-                <tr key={campaign.id}>
-                  <td className="font-medium text-slate-900">{campaign.name}</td>
-                  <td>
-                    {campaign.status === 'Sent' ? (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-50 text-emerald-700">
-                        {campaign.status}
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700">
-                        {campaign.status}
-                      </span>
-                    )}
-                  </td>
-                  <td className="text-sm text-slate-600">
-                    {campaign.sentDate ? new Date(campaign.sentDate).toLocaleDateString('en-US', {
-                      month: 'short', day: 'numeric', year: 'numeric'
-                    }) : '-'}
-                  </td>
-                  <td className="text-sm text-slate-600">{campaign.opens}</td>
-                  <td className="text-sm text-slate-600">{campaign.clicks}</td>
-                  <td className="text-right">
-                    <button className="text-indigo-600 hover:text-indigo-900 text-sm font-medium">
-                      {campaign.status === 'Draft' ? 'Edit' : 'View Report'}
-                    </button>
-                  </td>
-                </tr>
+                <CampaignRow key={campaign.id} eventId={id} campaign={campaign} />
               ))}
             </tbody>
           </table>

@@ -11,7 +11,10 @@ const tabs = [
   { label: 'Check-ins', href: '/check-ins' },
   { label: 'Scanner', href: '/scanner' },
   { label: 'Marketing', href: '/marketing' },
+  { label: 'Exhibitors', href: '/exhibitors' },
+  { label: 'Networking', href: '/networking' },
   { label: 'Analytics', href: '/analytics' },
+  { label: 'Settings', href: '/settings' },
 ];
 
 export default async function EventLayout({

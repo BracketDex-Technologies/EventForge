@@ -15,12 +15,33 @@ export default async function AnalyticsPage({
 
   if (!event) notFound();
 
-  // Mock data for analytics
+  const [registrationsCount, revenueData, checkInsCount] = await Promise.all([
+    prisma.ticket.count({
+      where: { eventId: id, status: { not: 'cancelled' } }
+    }),
+    prisma.order.aggregate({
+      _sum: { totalCents: true },
+      where: { eventId: id, status: 'completed' }
+    }),
+    prisma.checkIn.count({
+      where: { eventId: id }
+    })
+  ]);
+
+  const totalRevenue = revenueData._sum.totalCents ? Number(revenueData._sum.totalCents) / 100 : 0;
+  
+  // Format revenue based on event currency
+  const formattedRevenue = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: event.currency.toUpperCase() || 'USD',
+    minimumFractionDigits: 0,
+  }).format(totalRevenue);
+
   const metrics = [
     { label: 'Page Views', value: '12,450', change: '+14%' },
-    { label: 'Registrations', value: '845', change: '+5%' },
-    { label: 'Check-ins', value: '720', change: '+2%' },
-    { label: 'Revenue', value: '$45,200', change: '+24%' },
+    { label: 'Registrations', value: registrationsCount.toString(), change: 'Live' },
+    { label: 'Check-ins', value: checkInsCount.toString(), change: 'Live' },
+    { label: 'Revenue', value: formattedRevenue, change: 'Live' },
   ];
 
   const salesData = [
