@@ -26,7 +26,9 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/packages/db/node_modules ./packages/db/node_modules 2>/dev/null || true
 
 # Copy source
-COPY tsconfig.base.json ./
+COPY tsconfig.base.json package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+COPY apps/web/package.json ./apps/web/
+COPY apps/workers/package.json ./apps/workers/
 COPY packages/db ./packages/db
 COPY packages/domain ./packages/domain
 COPY packages/config ./packages/config
