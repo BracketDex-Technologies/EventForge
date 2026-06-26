@@ -248,10 +248,17 @@ model Event {
   checkIns         CheckIn[]
   badgeTemplates   BadgeTemplate[]
   badgePrintJobs   BadgePrintJob[]
-  attendeeProfiles AttendeeProfile[]
-  campaigns        Campaign[]
-  workflows        WorkflowDefinition[]
-  metricsHourly    EventMetricHourly[]
+  attendeeProfiles      AttendeeProfile[]
+  campaigns             Campaign[]
+  workflows             WorkflowDefinition[]
+  metricsHourly         EventMetricHourly[]
+  cfpConfig             CfpConfig?
+  abstracts             Abstract[]
+  certificateTemplates  CertificateTemplate[]
+  certificates          Certificate[]
+  floorPlans            FloorPlan[]
+  pushNotifications     PushNotification[]
+  pushSubscriptions     PushSubscription[]
 
   @@index([organizationId])
   @@index([organizationId, status])
@@ -881,6 +888,7 @@ model Campaign {
   bodyHtml       String    @map("body_html")
   bodyMjml       String?   @map("body_mjml")
   audience       Json? // segment definition
+  channel        String    @default("email") // email | whatsapp | push
   status         String    @default("draft") // draft | scheduled | sending | sent | cancelled
   scheduledAt    DateTime? @map("scheduled_at")
   sentAt         DateTime? @map("sent_at")
@@ -969,4 +977,173 @@ model EventMetricHourly {
   @@unique([eventId, hourBucket])
   @@index([eventId, hourBucket])
   @@map("event_metrics_hourly")
+}
+
+// ═══════════════════════════════════════════════════════════
+//  ── Call for Papers / Abstract Management (Phase 8) ──
+// ═══════════════════════════════════════════════════════════
+
+/// Event-level CFP configuration.
+model CfpConfig {
+  id             String    @id @default(uuid()) @db.Uuid
+  eventId        String    @unique @map("event_id") @db.Uuid
+  status         String    @default("draft") // draft | open | closed
+  opensAt        DateTime? @map("opens_at")
+  closesAt       DateTime? @map("closes_at")
+  guidelines     String?   @db.Text // markdown instructions for submitters
+  maxSubmissions Int       @default(3) @map("max_submissions")
+  reviewCriteria Json?     @map("review_criteria") // [{ id, label, maxScore }]
+  blindReview    Boolean   @default(true) @map("blind_review")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@map("cfp_configs")
+}
+
+/// An abstract submitted through the CFP process.
+model Abstract {
+  id            String    @id @default(uuid()) @db.Uuid
+  eventId       String    @map("event_id") @db.Uuid
+  title         String
+  description   String    @db.Text
+  authorName    String    @map("author_name")
+  authorEmail   String    @map("author_email")
+  authorBio     String?   @map("author_bio") @db.Text
+  trackId       String?   @map("track_id") @db.Uuid
+  sessionType   String    @default("talk") @map("session_type") // keynote | talk | workshop | panel
+  tags          String[]
+  attachmentUrl String?   @map("attachment_url")
+  status        String    @default("submitted") // submitted | under_review | accepted | rejected | withdrawn
+  avgScore      Float?    @map("avg_score")
+  convertedSessionId String? @map("converted_session_id") @db.Uuid
+  submittedAt   DateTime  @default(now()) @map("submitted_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  event   Event            @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  reviews AbstractReview[]
+
+  @@index([eventId])
+  @@index([eventId, status])
+  @@map("abstracts")
+}
+
+/// A blind review of an abstract.
+model AbstractReview {
+  id          String   @id @default(uuid()) @db.Uuid
+  abstractId  String   @map("abstract_id") @db.Uuid
+  reviewerId  String   @map("reviewer_id") @db.Uuid
+  scores      Json     // { criterionId: score } matching CfpConfig.reviewCriteria
+  comment     String?  @db.Text
+  recommend   String   @default("neutral") // accept | reject | neutral
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  abstract Abstract @relation(fields: [abstractId], references: [id], onDelete: Cascade)
+
+  @@unique([abstractId, reviewerId])
+  @@index([abstractId])
+  @@map("abstract_reviews")
+}
+
+// ═══════════════════════════════════════════════════════════
+//  ── Certificate Builder (Phase 9) ──
+// ═══════════════════════════════════════════════════════════
+
+/// Template for attendee certificates.
+model CertificateTemplate {
+  id        String   @id @default(uuid()) @db.Uuid
+  eventId   String   @map("event_id") @db.Uuid
+  name      String
+  layout    Json     // template layout with placeholder positions
+  style     String   @default("classic") // classic | modern | minimal | elegant
+  isDefault Boolean  @default(false) @map("is_default")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  event        Event         @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  certificates Certificate[]
+
+  @@index([eventId])
+  @@map("certificate_templates")
+}
+
+/// An issued certificate for an attendee.
+model Certificate {
+  id             String   @id @default(uuid()) @db.Uuid
+  eventId        String   @map("event_id") @db.Uuid
+  templateId     String   @map("template_id") @db.Uuid
+  attendeeName   String   @map("attendee_name")
+  attendeeEmail  String   @map("attendee_email")
+  verificationCode String @unique @map("verification_code")
+  pdfUrl         String?  @map("pdf_url")
+  issuedAt       DateTime @default(now()) @map("issued_at")
+
+  event    Event               @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  template CertificateTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  @@index([eventId])
+  @@index([verificationCode])
+  @@map("certificates")
+}
+
+// ═══════════════════════════════════════════════════════════
+//  ── Floor Plan (Phase 10) ──
+// ═══════════════════════════════════════════════════════════
+
+/// Visual floor plan for exhibitor booth layout.
+model FloorPlan {
+  id            String   @id @default(uuid()) @db.Uuid
+  eventId       String   @map("event_id") @db.Uuid
+  name          String   @default("Main Hall")
+  layout        Json     // { width, height, booths: [{ id, x, y, w, h, exhibitorId, label }] }
+  bgImageUrl    String?  @map("bg_image_url")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([eventId])
+  @@map("floor_plans")
+}
+
+// ═══════════════════════════════════════════════════════════
+//  ── Push Notifications (Phase 11) ──
+// ═══════════════════════════════════════════════════════════
+
+/// Web Push subscription for an attendee.
+model PushSubscription {
+  id         String   @id @default(uuid()) @db.Uuid
+  eventId    String   @map("event_id") @db.Uuid
+  attendeeId String?  @map("attendee_id") @db.Uuid
+  endpoint   String
+  keysP256dh String   @map("keys_p256dh")
+  keysAuth   String   @map("keys_auth")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([eventId])
+  @@map("push_subscriptions")
+}
+
+/// A push notification sent to event attendees.
+model PushNotification {
+  id          String    @id @default(uuid()) @db.Uuid
+  eventId     String    @map("event_id") @db.Uuid
+  title       String
+  body        String
+  url         String?   // deep-link URL
+  icon        String?
+  sentCount   Int       @default(0) @map("sent_count")
+  status      String    @default("draft") // draft | sending | sent | failed
+  scheduledAt DateTime? @map("scheduled_at")
+  sentAt      DateTime? @map("sent_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([eventId])
+  @@map("push_notifications")
 }

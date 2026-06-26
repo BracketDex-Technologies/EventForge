@@ -13,6 +13,12 @@ const tabs = [
   { label: 'Marketing', href: '/marketing' },
   { label: 'Exhibitors', href: '/exhibitors' },
   { label: 'Networking', href: '/networking' },
+  { label: 'CFP', href: '/cfp' },
+  { label: 'Certificates', href: '/certificates' },
+  { label: 'Website', href: '/website' },
+  { label: 'Kiosk', href: '/kiosk' },
+  { label: 'Floor Plan', href: '/floor-plan' },
+  { label: 'Notifications', href: '/notifications' },
   { label: 'Analytics', href: '/analytics' },
   { label: 'Settings', href: '/settings' },
 ];

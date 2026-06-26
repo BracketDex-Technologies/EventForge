@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import type { Metadata } from 'next';
+import PushSubscribePrompt from './PushSubscribePrompt';
 
 export async function generateMetadata({
   params,
@@ -94,6 +95,7 @@ export default async function PublicEventLayout({
 
       <main className="flex-1">
         {children}
+        <PushSubscribePrompt eventId={event.id} />
       </main>
 
       <footer className="bg-slate-900 text-slate-400 py-10 px-6">

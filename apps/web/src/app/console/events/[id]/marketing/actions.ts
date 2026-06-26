@@ -12,6 +12,7 @@ export async function createCampaign(
     bodyHtml: string;
     status: string;
     scheduledAt: string | null;
+    channel: string;
   }
 ) {
   const supabase = await createClient();
@@ -26,6 +27,7 @@ export async function createCampaign(
         subject: { en: data.subject },
         bodyHtml: data.bodyHtml,
         status: data.status || 'draft',
+        channel: data.channel || 'email',
         scheduledAt: data.scheduledAt ? new Date(data.scheduledAt) : null,
       },
     });
