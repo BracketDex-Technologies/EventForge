@@ -1,0 +1,368 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+/* ─── EventForge Design System ─── */
+:root {
+  /* Primary Palette */
+  --ef-primary: #4648d4;
+  --ef-primary-container: #6063ee;
+  --ef-primary-gradient: linear-gradient(135deg, #6366f1 0%, #4648d4 50%, #3b82f6 100%);
+  --ef-primary-gradient-hover: linear-gradient(135deg, #818cf8 0%, #5b5eda 50%, #60a5fa 100%);
+
+  /* Surfaces */
+  --ef-bg: #f8fafc;
+  --ef-surface: #ffffff;
+  --ef-surface-hover: #f8fafc;
+  --ef-surface-container: #f1f5f9;
+  --ef-surface-container-high: #e2e8f0;
+
+  /* Dark Sidebar */
+  --ef-sidebar: #0f1629;
+  --ef-sidebar-hover: rgba(255, 255, 255, 0.06);
+  --ef-sidebar-active: rgba(255, 255, 255, 0.1);
+  --ef-sidebar-text: rgba(255, 255, 255, 0.6);
+  --ef-sidebar-text-active: #ffffff;
+
+  /* Text */
+  --ef-text-primary: #0f172a;
+  --ef-text-secondary: #475569;
+  --ef-text-muted: #94a3b8;
+  --ef-text-on-primary: #ffffff;
+
+  /* Borders */
+  --ef-border: #e2e8f0;
+  --ef-border-subtle: #f1f5f9;
+
+  /* Status */
+  --ef-success: #059669;
+  --ef-success-bg: #ecfdf5;
+  --ef-success-text: #065f46;
+  --ef-info: #2563eb;
+  --ef-info-bg: #eff6ff;
+  --ef-info-text: #1e40af;
+  --ef-warning: #d97706;
+  --ef-warning-bg: #fffbeb;
+  --ef-warning-text: #92400e;
+  --ef-danger: #dc2626;
+  --ef-danger-bg: #fef2f2;
+  --ef-danger-text: #991b1b;
+
+  /* Elevation */
+  --ef-shadow-sm: 0px 1px 3px rgba(15, 22, 41, 0.04), 0px 1px 2px rgba(15, 22, 41, 0.02);
+  --ef-shadow: 0px 4px 20px rgba(15, 22, 41, 0.05);
+  --ef-shadow-md: 0px 8px 24px rgba(15, 22, 41, 0.08);
+  --ef-shadow-lg: 0px 12px 32px rgba(15, 22, 41, 0.12);
+  --ef-shadow-glow: 0px 0px 20px rgba(99, 102, 241, 0.25);
+
+  /* Spacing */
+  --ef-space-xs: 4px;
+  --ef-space-sm: 8px;
+  --ef-space-md: 16px;
+  --ef-space-lg: 24px;
+  --ef-space-xl: 32px;
+  --ef-space-2xl: 48px;
+
+  /* Radius */
+  --ef-radius-sm: 6px;
+  --ef-radius: 8px;
+  --ef-radius-md: 12px;
+  --ef-radius-lg: 16px;
+  --ef-radius-xl: 20px;
+  --ef-radius-full: 9999px;
+
+  /* Transitions */
+  --ef-transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --ef-transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Legacy compatibility */
+  --background: #f8fafc;
+  --foreground: #0f172a;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* ─── Base ─── */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--ef-bg);
+  color: var(--ef-text-primary);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+/* ─── Typography ─── */
+.ef-headline-xl {
+  font-family: 'Inter', sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 44px;
+  letter-spacing: -0.02em;
+  color: var(--ef-text-primary);
+}
+
+.ef-headline-lg {
+  font-family: 'Inter', sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 32px;
+  letter-spacing: -0.01em;
+  color: var(--ef-text-primary);
+}
+
+.ef-headline-md {
+  font-family: 'Inter', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 28px;
+  color: var(--ef-text-primary);
+}
+
+.ef-body-lg {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.ef-body-md {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.ef-label-md {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.01em;
+}
+
+.ef-label-sm {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* ─── Components: Buttons ─── */
+.ef-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 24px;
+  background: var(--ef-primary-gradient);
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: var(--ef-radius-full);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all var(--ef-transition);
+  box-shadow: var(--ef-shadow-sm);
+}
+
+.ef-btn-primary:hover {
+  background: var(--ef-primary-gradient-hover);
+  box-shadow: var(--ef-shadow-glow);
+  transform: translateY(-1px);
+}
+
+.ef-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 24px;
+  background: var(--ef-surface);
+  color: var(--ef-text-primary);
+  font-weight: 500;
+  font-size: 14px;
+  border-radius: var(--ef-radius-full);
+  border: 1px solid var(--ef-border);
+  cursor: pointer;
+  transition: all var(--ef-transition);
+}
+
+.ef-btn-secondary:hover {
+  background: var(--ef-surface-hover);
+  border-color: #cbd5e1;
+}
+
+/* ─── Components: Cards ─── */
+.ef-card {
+  background: var(--ef-surface);
+  border-radius: var(--ef-radius-md);
+  box-shadow: var(--ef-shadow);
+  border: 1px solid var(--ef-border-subtle);
+  overflow: hidden;
+}
+
+.ef-card-hover {
+  transition: all var(--ef-transition);
+}
+
+.ef-card-hover:hover {
+  box-shadow: var(--ef-shadow-md);
+  transform: translateY(-2px);
+}
+
+/* ─── Components: Inputs ─── */
+.ef-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--ef-border);
+  border-radius: var(--ef-radius);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--ef-text-primary);
+  background: var(--ef-surface);
+  transition: all var(--ef-transition);
+  outline: none;
+}
+
+.ef-input:focus {
+  border-color: var(--ef-primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+.ef-input::placeholder { color: var(--ef-text-muted); }
+
+.ef-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ef-text-secondary);
+  margin-bottom: 6px;
+}
+
+/* ─── Components: Badges ─── */
+.ef-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: var(--ef-radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.ef-badge-success {
+  background: var(--ef-success-bg);
+  color: var(--ef-success-text);
+}
+
+.ef-badge-info {
+  background: var(--ef-info-bg);
+  color: var(--ef-info-text);
+}
+
+.ef-badge-warning {
+  background: var(--ef-warning-bg);
+  color: var(--ef-warning-text);
+}
+
+.ef-badge-neutral {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.ef-badge-purple {
+  background: #ede9fe;
+  color: #5b21b6;
+}
+
+/* ─── Components: Table ─── */
+.ef-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+.ef-table th {
+  padding: 12px 24px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ef-text-muted);
+  background: var(--ef-surface-container);
+  border-bottom: 1px solid var(--ef-border-subtle);
+}
+.ef-table td {
+  padding: 16px 24px;
+  font-size: 14px;
+  color: var(--ef-text-primary);
+  border-bottom: 1px solid var(--ef-border-subtle);
+}
+.ef-table tbody tr {
+  transition: background var(--ef-transition);
+}
+.ef-table tbody tr:hover {
+  background: var(--ef-surface-hover);
+}
+
+/* ─── Animations ─── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+  50% { box-shadow: 0 0 20px 4px rgba(99, 102, 241, 0.15); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s ease-out both;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.3s ease-out both;
+}
+
+/* Stagger delays */
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+
+/* ─── Gradient text utility ─── */
+.ef-gradient-text {
+  background: var(--ef-primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Dot pattern background ─── */
+.ef-dot-pattern {
+  background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
