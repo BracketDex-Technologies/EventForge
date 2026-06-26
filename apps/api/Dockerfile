@@ -1,5 +1,5 @@
-# ── Stage 1: Build ─────────────────────────────────────────────
-FROM node:20-alpine AS builder
+# ── Production Image ──────────────────────────────────────────
+FROM node:20-alpine
 WORKDIR /app
 
 RUN npm install -g pnpm
@@ -7,27 +7,17 @@ RUN npm install -g pnpm
 # Copy all source files
 COPY . .
 
-# Install dependencies including devDependencies (ignoring lifecycle scripts)
+# Install all dependencies (including devDependencies needed for build)
 RUN pnpm install --frozen-lockfile --ignore-scripts
 
-# Generate Prisma client directly (bypassing dotenv-cli which requires a local .env file)
+# Generate Prisma client
 RUN pnpm --filter @eventforge/db exec prisma generate
 
 # Build API
 RUN pnpm --filter @eventforge/api build
 
-# ── Stage 2: Production image ──────────────────────────────────
-FROM node:20-alpine AS runner
-WORKDIR /app
-
-RUN npm install -g pnpm
-
+# Set production environment
 ENV NODE_ENV=production
-
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/apps/api/dist ./apps/api/dist
-COPY --from=builder /app/apps/api/package.json ./apps/api/package.json
-COPY --from=builder /app/packages ./packages
 
 EXPOSE 4000
 
