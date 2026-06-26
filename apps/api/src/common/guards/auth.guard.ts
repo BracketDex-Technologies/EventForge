@@ -9,8 +9,8 @@
  * Stripe webhook, health).
  */
 import {
-  CanActivate,
-  ExecutionContext,
+  type CanActivate,
+  type ExecutionContext,
   Injectable,
   Inject,
   UnauthorizedException,
@@ -45,7 +45,7 @@ export class AuthGuard implements CanActivate {
     if (isPublic) {
       // For public routes we still attach the user if a token was provided
       // (lets public event pages show personalized state when logged in).
-      if (token) await this.tryAttach(req, token).catch(() => undefined);
+      if (token) {await this.tryAttach(req, token).catch(() => undefined);}
       return true;
     }
 

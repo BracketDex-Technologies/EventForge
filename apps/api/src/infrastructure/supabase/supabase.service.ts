@@ -7,7 +7,7 @@
  *
  * Also offers JWT verification helpers used by AuthGuard.
  */
-import { Injectable, OnModuleInit, Inject } from '@nestjs/common';
+import { Injectable, type OnModuleInit, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
   createClient,

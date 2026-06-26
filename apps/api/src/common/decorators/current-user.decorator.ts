@@ -1,7 +1,7 @@
 /**
  * @CurrentUser() param decorator — yields the authenticated AuthUser or null.
  */
-import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { createParamDecorator, type ExecutionContext } from '@nestjs/common';
 import { AUTH_USER_KEY } from '../constants.js';
 import type { AuthUser } from '../request-context.js';
 

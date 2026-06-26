@@ -4,7 +4,7 @@
  * Requires TenantGuard to have run. Throws 500 if used on a route that
  * forgot to mount the guard (catches a class of tenant-leak bugs in dev).
  */
-import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { createParamDecorator, type ExecutionContext } from '@nestjs/common';
 import { TENANT_CONTEXT_KEY } from '../constants.js';
 import type { TenantContext } from '../request-context.js';
 

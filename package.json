@@ -2,6 +2,7 @@
   "name": "eventforge",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "description": "EventForge — a production-grade Zoho Backstage / Events clone (Next.js + NestJS + Supabase).",
   "packageManager": "pnpm@9.12.0",
   "engines": {

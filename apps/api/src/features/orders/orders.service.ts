@@ -196,19 +196,19 @@ export class OrdersService {
     let event: Stripe.Event;
     try {
       event = this.stripe.webhooks.constructEvent(rawBody, signature, secret);
-    } catch (err) {
+    } catch (_err) {
       throw new BadRequestException('Invalid webhook signature');
     }
 
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object as Stripe.Checkout.Session;
       const orderId = session.metadata?.orderId;
-      if (!orderId) return { received: true };
+      if (!orderId) {return { received: true };}
 
       const order = await this.prisma.client.order.findUnique({
         where: { id: orderId },
       });
-      if (!order || order.status === 'completed') return { received: true };
+      if (!order || order.status === 'completed') {return { received: true };}
 
       await this.prisma.client.order.update({
         where: { id: orderId },

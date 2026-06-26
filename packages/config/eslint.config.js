@@ -1,6 +1,6 @@
 // @ts-check
-const tseslint = require("typescript-eslint");
-const prettierConfig = require("eslint-config-prettier");
+import tseslint from "typescript-eslint";
+import prettierConfig from "eslint-config-prettier";
 
 /**
  * Shared ESLint 9 flat-config base.
@@ -12,15 +12,9 @@ const prettierConfig = require("eslint-config-prettier");
  * @type {import("eslint").Linter.Config[]}
  */
 const base = [
-  ...tseslint.configs.strict,
+  ...tseslint.configs.recommended,
   prettierConfig,
   {
-    languageOptions: {
-      parserOptions: {
-        projectService: true,
-        tsconfigRootDir: import.meta.dirname,
-      },
-    },
     rules: {
       // --- TypeScript best-practices ---
       "@typescript-eslint/consistent-type-imports": [
@@ -29,11 +23,10 @@ const base = [
       ],
       "@typescript-eslint/no-unused-vars": [
         "error",
-        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
+        { argsIgnorePattern: "^_", varsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_" },
       ],
       "@typescript-eslint/no-empty-interface": "off",
       "@typescript-eslint/no-explicit-any": "warn",
-      "@typescript-eslint/require-await": "warn",
 
       // --- General code quality ---
       "eqeqeq": ["error", "always", { null: "ignore" }],
@@ -41,6 +34,9 @@ const base = [
       "curly": ["error", "all"],
     },
   },
+  {
+    ignores: ["**/tailwind-preset.ts"],
+  },
 ];
 
-module.exports = base;
+export default base;

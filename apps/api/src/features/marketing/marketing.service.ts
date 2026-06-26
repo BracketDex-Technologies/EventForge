@@ -11,7 +11,7 @@ export class MarketingService {
     const event = await this.prisma.client.event.findFirst({
       where: { id: eventId, organizationId: ctx.organizationId, deletedAt: null },
     });
-    if (!event) throw new NotFoundException('Event not found');
+    if (!event) {throw new NotFoundException('Event not found');}
 
     return this.prisma.client.campaign.create({
       data: {

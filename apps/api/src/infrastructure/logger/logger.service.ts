@@ -4,7 +4,7 @@
  *
  * In production, logs are JSON to stdout. In dev, pretty-printed.
  */
-import { Injectable, LoggerService as NestLoggerService } from '@nestjs/common';
+import { Injectable, type LoggerService as NestLoggerService } from '@nestjs/common';
 import pino, { type Logger } from 'pino';
 
 @Injectable()

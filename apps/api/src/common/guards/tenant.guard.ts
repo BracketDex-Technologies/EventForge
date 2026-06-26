@@ -12,8 +12,8 @@
  * the route is @Public()). This is the second line of defense on top of RLS.
  */
 import {
-  CanActivate,
-  ExecutionContext,
+  type CanActivate,
+  type ExecutionContext,
   ForbiddenException,
   Injectable,
   Inject,

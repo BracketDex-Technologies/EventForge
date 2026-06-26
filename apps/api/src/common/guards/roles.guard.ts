@@ -5,8 +5,8 @@
  * owner/admin/organizer all pass, but staff/viewer get a 403.
  */
 import {
-  CanActivate,
-  ExecutionContext,
+  type CanActivate,
+  type ExecutionContext,
   ForbiddenException,
   Injectable,
   Inject,
@@ -28,14 +28,14 @@ export class RolesGuard implements CanActivate {
         context.getClass(),
       ]) ?? [];
 
-    if (required.length === 0) return true;
+    if (required.length === 0) {return true;}
 
     const req = context.switchToHttp().getRequest<FastifyRequest>();
     const ctx = (req as unknown as Record<symbol, unknown>)[
       TENANT_CONTEXT_KEY
     ] as { role: OrgRole | null; isSuperAdmin: boolean } | undefined;
 
-    if (ctx?.isSuperAdmin) return true;
+    if (ctx?.isSuperAdmin) {return true;}
 
     const role = ctx?.role ?? null;
     const ok = required.some((r) => hasMinRole(role, r));

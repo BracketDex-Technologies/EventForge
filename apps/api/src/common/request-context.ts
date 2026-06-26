@@ -47,6 +47,6 @@ export const ROLE_RANK: Record<OrgRole, number> = {
 
 /** Returns true if `actual` satisfies `required` (>= in the hierarchy). */
 export function hasMinRole(actual: OrgRole | null, required: OrgRole): boolean {
-  if (!actual) return false;
+  if (!actual) {return false;}
   return ROLE_RANK[actual] >= ROLE_RANK[required];
 }

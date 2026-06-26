@@ -81,7 +81,7 @@ export class SessionsService {
     id: string,
     input: Partial<CreateSession>,
   ) {
-    const session = await this.findById(ctx, id);
+    await this.findById(ctx, id);
     const updated = await this.prisma.client.session.update({
       where: { id },
       data: {

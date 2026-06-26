@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service.js';
 import { AuditService } from '../../common/services/audit.service.js';
-import { Prisma } from '@eventforge/db';
+import { type Prisma } from '@eventforge/db';
 import type { TenantContext } from '../../common/request-context.js';
 import type { CreatePoll, CreateQaMessage } from '@eventforge/domain';
 

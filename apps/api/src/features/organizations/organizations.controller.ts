@@ -16,7 +16,7 @@ import { Roles } from '../../common/decorators/roles.decorator.js';
 import { CurrentUser } from '../../common/decorators/current-user.decorator.js';
 import { CurrentTenant } from '../../common/decorators/current-tenant.decorator.js';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe.js';
-import type { AuthUser, TenantContext, OrgRole } from '../../common/request-context.js';
+import type { AuthUser, TenantContext } from '../../common/request-context.js';
 import { slugSchema } from '@eventforge/domain';
 import { OrganizationsService } from './organizations.service.js';
 

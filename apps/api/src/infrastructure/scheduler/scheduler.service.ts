@@ -1,7 +1,7 @@
 /**
  * SchedulerService — setInterval-based cron for dev. Production uses BullMQ.
  */
-import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
+import { Injectable, Logger, type OnModuleDestroy } from '@nestjs/common';
 
 export interface CronJob {
   name: string;
@@ -30,7 +30,7 @@ export class SchedulerService implements OnModuleDestroy {
   }
 
   onModuleDestroy(): void {
-    for (const t of this.timers.values()) clearInterval(t);
+    for (const t of this.timers.values()) {clearInterval(t);}
     this.timers.clear();
   }
 }

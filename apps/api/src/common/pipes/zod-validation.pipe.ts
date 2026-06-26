@@ -5,13 +5,13 @@
  * Zod schemas exported from @eventforge/domain.
  */
 import {
-  PipeTransform,
+  type PipeTransform,
   BadRequestException,
   Injectable,
   Inject,
-  ArgumentMetadata,
+  type ArgumentMetadata,
 } from '@nestjs/common';
-import { ZodSchema, ZodError } from 'zod';
+import { ZodSchema, type ZodError } from 'zod';
 
 @Injectable()
 export class ZodValidationPipe implements PipeTransform {

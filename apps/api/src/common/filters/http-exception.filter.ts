@@ -14,11 +14,10 @@
  * generic detail (no stack leakage).
  */
 import {
-  ArgumentsHost,
+  type ArgumentsHost,
   Catch,
-  ExceptionFilter,
+  type ExceptionFilter,
   HttpException,
-  HttpStatus,
   Logger,
 } from '@nestjs/common';
 import type { FastifyReply, FastifyRequest } from 'fastify';
@@ -79,7 +78,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         base.detail = payload;
       } else if (payload && typeof payload === 'object') {
         const p = payload as Record<string, unknown>;
-        if (typeof p.message === 'string') base.detail = p.message;
+        if (typeof p.message === 'string') {base.detail = p.message;}
         else if (Array.isArray(p.message)) {
           base.detail = 'Validation failed';
           base.errors = (p.message as string[]).map((m) => ({
@@ -87,7 +86,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
             message: m,
           }));
         }
-        if (typeof p.detail === 'string') base.detail = p.detail;
+        if (typeof p.detail === 'string') {base.detail = p.detail;}
       }
       body = base;
     } else if (exception instanceof ZodError) {

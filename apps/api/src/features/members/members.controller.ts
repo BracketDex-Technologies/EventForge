@@ -14,7 +14,7 @@ import { RolesGuard } from '../../common/guards/roles.guard.js';
 import { Roles } from '../../common/decorators/roles.decorator.js';
 import { CurrentTenant } from '../../common/decorators/current-tenant.decorator.js';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe.js';
-import type { TenantContext, OrgRole } from '../../common/request-context.js';
+import type { TenantContext } from '../../common/request-context.js';
 import { OrgRoleSchema } from '@eventforge/domain';
 import { MembersService } from './members.service.js';
 

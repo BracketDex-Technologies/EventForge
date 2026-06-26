@@ -1,6 +1,5 @@
 import { Controller,
   Post,
-  Get,
   Body,
   Param,
   Headers,

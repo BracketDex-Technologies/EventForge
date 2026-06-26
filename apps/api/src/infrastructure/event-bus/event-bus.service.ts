@@ -51,7 +51,7 @@ export class EventBusService {
 
   async emit<T>(event: DomainEvent<T>): Promise<void> {
     const set = this.handlers.get(event.name);
-    if (!set || set.size === 0) return;
+    if (!set || set.size === 0) {return;}
     await Promise.all(
       [...set].map(async (h) => {
         try {

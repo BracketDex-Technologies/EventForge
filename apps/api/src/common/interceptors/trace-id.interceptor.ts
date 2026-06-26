@@ -3,13 +3,13 @@
  * response header so clients can correlate logs/errors.
  */
 import {
-  CallHandler,
-  ExecutionContext,
+  type CallHandler,
+  type ExecutionContext,
   Injectable,
-  NestInterceptor,
+  type NestInterceptor,
 } from '@nestjs/common';
 import type { FastifyReply } from 'fastify';
-import { Observable } from 'rxjs';
+import { type Observable } from 'rxjs';
 
 @Injectable()
 export class TraceIdInterceptor implements NestInterceptor {
@@ -17,7 +17,7 @@ export class TraceIdInterceptor implements NestInterceptor {
     const res = context.switchToHttp().getResponse<FastifyReply>();
     const req = context.switchToHttp().getRequest();
     const id = (req.id as string | undefined) ?? '';
-    if (id) res.header('x-trace-id', id);
+    if (id) {res.header('x-trace-id', id);}
     return next.handle();
   }
 }

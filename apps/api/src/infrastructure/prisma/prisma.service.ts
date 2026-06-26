@@ -3,7 +3,7 @@
  * to disconnect on shutdown. Re-exports `prisma` from @eventforge/db so the
  * whole monorepo uses one connection pool.
  */
-import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
+import { Injectable, Logger, type OnModuleDestroy } from '@nestjs/common';
 import { prisma, type PrismaClient } from '@eventforge/db';
 
 @Injectable()

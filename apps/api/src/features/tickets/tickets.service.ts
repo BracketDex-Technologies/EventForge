@@ -2,11 +2,10 @@ import {
   Injectable,
   Inject,
   NotFoundException,
-  BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service.js';
 import { AuditService } from '../../common/services/audit.service.js';
-import { Prisma } from '@eventforge/db';
+import type { Prisma } from '@eventforge/db';
 import type { TenantContext } from '../../common/request-context.js';
 import type { CreateTicketType } from '@eventforge/domain';
 
@@ -77,7 +76,7 @@ export class TicketsService {
     id: string,
     input: Partial<CreateTicketType>,
   ) {
-    const ticket = await this.findById(ctx, id);
+    await this.findById(ctx, id);
     const updated = await this.prisma.client.ticketType.update({
       where: { id },
       data: {
