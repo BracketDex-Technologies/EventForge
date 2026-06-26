@@ -13,6 +13,7 @@ import {
   createClient,
   type SupabaseClient,
 } from '@supabase/supabase-js';
+import ws from 'ws';
 import type { AllConfig } from '../../config/configuration.js';
 
 @Injectable()
@@ -31,11 +32,15 @@ export class SupabaseService implements OnModuleInit {
     );
     this.jwtSecret = this.config.getOrThrow('supabaseJwtSecret');
 
+    const realtime = { transport: ws as unknown as typeof WebSocket };
+
     this.anon = createClient(this.url, anonKey, {
       auth: { persistSession: false, autoRefreshToken: false },
+      realtime,
     });
     this.admin = createClient(this.url, serviceRoleKey, {
       auth: { persistSession: false, autoRefreshToken: false },
+      realtime,
     });
   }
 
