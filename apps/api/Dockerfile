@@ -23,7 +23,6 @@ WORKDIR /app
 RUN npm install -g pnpm
 
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/packages/db/node_modules ./packages/db/node_modules 2>/dev/null || true
 
 # Copy source
 COPY tsconfig.base.json package.json pnpm-workspace.yaml pnpm-lock.yaml ./
