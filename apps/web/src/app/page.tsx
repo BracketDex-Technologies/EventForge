@@ -1,9 +1,17 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
 export default function Home() {
+  const [activeTab, setActiveTab] = useState<'create' | 'join'>('create');
+  const [eventName, setEventName] = useState('');
+  const [capacity, setCapacity] = useState('');
+  const [location, setLocation] = useState('');
+  const [ticketCode, setTicketCode] = useState('');
+  const [email, setEmail] = useState('');
+
   const stats = [
     { value: '99.9%', label: 'Uptime guarantee' },
     { value: '1.2M+', label: 'Tickets processed' },
@@ -69,157 +77,220 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100 overflow-x-hidden font-sans">
-      {/* Glow Effects */}
-      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] rounded-full blur-[160px] opacity-[0.08] bg-indigo-500 pointer-events-none" />
-      <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] rounded-full blur-[140px] opacity-[0.05] bg-teal-500 pointer-events-none" />
-      <div className="absolute bottom-10 left-1/3 w-[600px] h-[600px] rounded-full blur-[180px] opacity-[0.04] bg-indigo-600 pointer-events-none" />
-
-      {/* Header */}
-      <header className="w-full py-4 px-6 lg:px-10 flex items-center justify-between sticky top-0 z-50 border-b border-slate-900 bg-slate-950/80 backdrop-blur-md">
-        <Link href="/" className="inline-flex items-center gap-2.5 group">
-          <div className="p-1 rounded-lg bg-slate-900 border border-slate-800">
+    <div className="min-h-screen flex flex-col bg-[#0c0d12] text-slate-100 overflow-x-hidden font-sans">
+      
+      {/* Navigation Header */}
+      <header className="w-full h-20 px-6 lg:px-12 flex items-center justify-between sticky top-0 z-50 border-b border-slate-900/60 bg-[#0c0d12]/90 backdrop-blur-md">
+        <Link href="/" className="inline-flex items-center gap-2.5">
+          <div className="p-1 rounded-xl bg-slate-900 border border-slate-800">
             <Image src="/logo-icon.svg" alt="EventForge" width={28} height={28} />
           </div>
           <span className="font-bold text-lg tracking-tight text-white">EventForge</span>
         </Link>
-        <div className="flex items-center gap-4">
-          <Link href="/login" className="text-sm font-semibold text-slate-400 hover:text-white transition-colors">
+
+        {/* Central Nav Links */}
+        <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-400">
+          <Link href="#" className="hover:text-white transition-colors">About Us</Link>
+          <div className="flex items-center gap-1 cursor-pointer hover:text-white transition-colors group">
+            <span>Features</span>
+            <svg className="w-3.5 h-3.5 text-slate-500 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+            </svg>
+          </div>
+          <Link href="#" className="hover:text-white transition-colors">How It Works</Link>
+          <Link href="#" className="hover:text-white transition-colors">Pricing</Link>
+          <Link href="#" className="hover:text-white transition-colors">Support</Link>
+        </nav>
+
+        {/* Action CTAs */}
+        <div className="flex items-center gap-5">
+          <Link href="/login" className="text-sm font-bold text-slate-300 hover:text-white transition-colors">
             Sign in
           </Link>
-          <Link href="/login" className="py-2 px-4.5 rounded-xl bg-white text-slate-950 font-bold text-sm hover:bg-slate-200 transition-colors shadow-lg shadow-white/5">
-            Get started
+          <Link href="/login" className="py-2.5 px-5 rounded-xl bg-[#FF8552] text-slate-950 font-bold text-xs uppercase tracking-wider hover:bg-[#ff966c] transition-colors shadow-lg shadow-[#FF8552]/10">
+            Get Started
           </Link>
         </div>
       </header>
 
       <main className="flex-1">
-        {/* Hero Section */}
-        <section className="pt-20 pb-16 px-6 relative">
-          <div className="max-w-5xl mx-auto text-center space-y-8">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-semibold">
-              <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
-              Now Open: Parity Release with Zoho Backstage
-            </div>
-            
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-[1.08] max-w-4xl mx-auto">
-              Run high-stakes events
-              <span className="block mt-2 bg-gradient-to-r from-teal-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">
-                with absolute control.
-              </span>
-            </h1>
-
-            <p className="mt-6 text-base md:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed font-light">
-              EventForge is the complete event management suite. Host agendas, configure customizable ticket sales, manage automated email workflows, and scan QR check-ins.
-            </p>
-
-            <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4 max-w-sm sm:max-w-none mx-auto">
-              <Link href="/login" className="w-full sm:w-auto py-3.5 px-8 rounded-xl bg-indigo-600 text-white font-bold text-sm hover:bg-indigo-500 active:bg-indigo-700 transition-all shadow-lg shadow-indigo-600/25 flex items-center justify-center gap-2">
-                Start hosting for free
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                </svg>
-              </Link>
-              <Link href="/login" className="w-full sm:w-auto py-3.5 px-8 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 font-bold text-sm hover:bg-slate-800 hover:text-white transition-all">
-                Explore demo dashboard
-              </Link>
-            </div>
-          </div>
-
-          {/* Product Dashboard Mockup */}
-          <div className="max-w-5xl mx-auto mt-16 px-4 md:px-0 animate-fade-in-up delay-200">
-            <div className="relative rounded-2xl border border-slate-800/80 bg-slate-900/30 backdrop-blur-xl p-1.5 shadow-2xl">
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-indigo-500/10 via-transparent to-teal-400/10 opacity-60 pointer-events-none" />
+        
+        {/* Split Hero Section */}
+        <section className="relative min-h-[calc(100vh-80px)] flex flex-col lg:flex-row items-stretch border-b border-slate-900/60">
+          
+          {/* Left Column (Content & Widgets) */}
+          <div className="flex-1 p-6 sm:p-12 lg:p-16 flex flex-col justify-center max-w-4xl z-10 bg-[#0c0d12]">
+            <div className="space-y-8 max-w-2xl">
               
-              {/* Fake Window Controls */}
-              <div className="bg-slate-950/70 border border-slate-800 rounded-xl overflow-hidden">
-                <div className="h-10 px-4 border-b border-slate-900 flex items-center justify-between bg-slate-950/90 shrink-0">
-                  <div className="flex gap-1.5">
-                    <div className="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/40" />
-                    <div className="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/40" />
-                    <div className="w-3 h-3 rounded-full bg-green-500/20 border border-green-500/40" />
+              {/* Star Ratings Row */}
+              <div className="flex flex-wrap items-center gap-8">
+                {/* Reviews.io badge */}
+                <div className="space-y-1 text-left">
+                  <div className="flex gap-1">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <svg key={s} className="w-4 h-4 text-amber-500 fill-amber-500" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    ))}
                   </div>
-                  <div className="text-[11px] font-mono text-slate-500 tracking-wide">console.eventforge.app/dashboard</div>
-                  <div className="w-12" />
+                  <p className="text-xs font-semibold text-slate-300">
+                    4.9/5 <span className="text-slate-500 font-medium">(25K+ Reviews)</span>
+                  </p>
+                  <p className="text-[10px] font-bold text-slate-500 tracking-wider uppercase">Reviews.io</p>
                 </div>
 
-                {/* Dashboard Grid */}
-                <div className="p-6 md:p-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {/* Left Column: Stats & Progress */}
-                  <div className="md:col-span-2 space-y-6">
-                    <div className="flex items-center justify-between border-b border-slate-900 pb-4">
-                      <div>
-                        <span className="text-[10px] uppercase font-bold text-indigo-400 tracking-wider">Active Event</span>
-                        <h3 className="text-lg font-bold text-white mt-0.5">Global WebDev Summit 2026</h3>
-                      </div>
-                      <span className="px-2.5 py-1 rounded-full bg-teal-500/10 text-teal-400 border border-teal-500/20 text-[10px] font-bold uppercase animate-pulse">Live</span>
-                    </div>
+                {/* Trustpilot badge */}
+                <div className="space-y-1 text-left">
+                  <div className="flex gap-1">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <svg key={s} className="w-4 h-4 text-emerald-400 fill-emerald-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    ))}
+                  </div>
+                  <p className="text-xs font-semibold text-slate-300">
+                    4.8/5 <span className="text-slate-500 font-medium">(64K+ Reviews)</span>
+                  </p>
+                  <p className="text-[10px] font-bold text-slate-500 tracking-wider uppercase">Trustpilot</p>
+                </div>
+              </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                      <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/60">
-                        <span className="text-[10px] font-semibold text-slate-500 uppercase">Tickets Sold</span>
-                        <p className="text-2xl font-bold text-white mt-1">1,248 <span className="text-xs font-normal text-slate-500">/ 1,500</span></p>
-                        <div className="w-full bg-slate-950 h-1.5 rounded-full mt-3 overflow-hidden">
-                          <div className="bg-indigo-500 h-full rounded-full" style={{ width: '83%' }} />
-                        </div>
-                      </div>
-                      <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/60">
-                        <span className="text-[10px] font-semibold text-slate-500 uppercase">Total Revenue</span>
-                        <p className="text-2xl font-bold text-white mt-1">$124,800</p>
-                        <p className="text-[10px] text-teal-400 font-semibold mt-2.5 flex items-center gap-1">
-                          ↑ 14% this hour
-                        </p>
-                      </div>
-                      <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/60">
-                        <span className="text-[10px] font-semibold text-slate-500 uppercase">Check-ins</span>
-                        <p className="text-2xl font-bold text-white mt-1">842 <span className="text-xs font-normal text-slate-500">/ 1,248</span></p>
-                        <div className="w-full bg-slate-950 h-1.5 rounded-full mt-3 overflow-hidden">
-                          <div className="bg-teal-400 h-full rounded-full" style={{ width: '67%' }} />
-                        </div>
-                      </div>
-                    </div>
+              {/* Headline */}
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-[1.05] tracking-tight">
+                Skip the Hassle: Complete Event Management, <span className="text-[#FF8552]">100% Guaranteed!</span>
+              </h1>
 
-                    {/* Fake Chart */}
-                    <div className="p-5 rounded-xl bg-slate-900/40 border border-slate-800/60">
-                      <span className="text-[10px] font-semibold text-slate-500 uppercase block mb-6">Registration Velocity (hourly)</span>
-                      <div className="h-32 flex items-end gap-3 pt-2">
-                        {[25, 45, 30, 60, 85, 55, 70, 95, 120, 80, 110, 140].map((h, i) => (
-                          <div key={i} className="flex-1 flex flex-col items-center gap-2 group">
-                            <div className="w-full bg-gradient-to-t from-indigo-600 to-teal-400 rounded-t-sm transition-all duration-500" style={{ height: `${h}%` }} />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
+              {/* Description */}
+              <p className="text-slate-400 text-sm sm:text-base font-light leading-relaxed max-w-xl">
+                Events made easy: Venues, ticketing, live polling, and check-ins at your fingertips. Get started today and manage your first event for free!
+              </p>
+
+              {/* Bottom Interactive Search Widget */}
+              <div className="pt-4 max-w-xl">
+                <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl overflow-hidden shadow-2xl p-1.5 backdrop-blur-xl">
+                  {/* Selector Tabs */}
+                  <div className="flex gap-1 pb-1 border-b border-slate-800/40 px-2 pt-1.5 shrink-0">
+                    <button
+                      onClick={() => setActiveTab('create')}
+                      className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors ${
+                        activeTab === 'create'
+                          ? 'bg-slate-800 text-white'
+                          : 'text-slate-500 hover:text-slate-300'
+                      }`}
+                    >
+                      Create Event
+                    </button>
+                    <button
+                      onClick={() => setActiveTab('join')}
+                      className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors ${
+                        activeTab === 'join'
+                          ? 'bg-slate-800 text-white'
+                          : 'text-slate-500 hover:text-slate-300'
+                      }`}
+                    >
+                      Join Event
+                    </button>
                   </div>
 
-                  {/* Right Column: Live Feed */}
-                  <div className="space-y-4">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Live Activity Feed</h4>
-                    <div className="space-y-3">
-                      {[
-                        { title: 'VIP Ticket checkout complete', detail: 'Sarah Connor purchased 1 ticket', time: '1m ago', color: 'border-l-indigo-500' },
-                        { title: 'Attendee check-in verified', detail: 'David Miller scanned at main hall', time: '3m ago', color: 'border-l-teal-400' },
-                        { title: 'Live Poll opened', detail: 'Session: "Future of Next.js"', time: '8m ago', color: 'border-l-purple-500' },
-                        { title: 'New speaker confirmed', detail: 'Dr. Evelyn Carter joined Agenda', time: '15m ago', color: 'border-l-yellow-500' },
-                      ].map((feed, i) => (
-                        <div key={i} className={`p-3 bg-slate-900/80 border-l-2 ${feed.color} border border-slate-800/60 rounded-r-xl flex justify-between items-start text-left`}>
-                          <div>
-                            <p className="text-xs font-bold text-white leading-tight">{feed.title}</p>
-                            <p className="text-[10px] text-slate-500 mt-0.5">{feed.detail}</p>
-                          </div>
-                          <span className="text-[9px] text-slate-600 font-medium whitespace-nowrap">{feed.time}</span>
+                  {/* Input Form Fields */}
+                  <div className="p-3 grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
+                    {activeTab === 'create' ? (
+                      <>
+                        <div className="sm:col-span-4 space-y-1">
+                          <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500 px-1">Workspace</label>
+                          <input
+                            type="text"
+                            placeholder="Acme Events"
+                            value={eventName}
+                            onChange={(e) => setEventName(e.target.value)}
+                            className="w-full bg-slate-950/80 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-700 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-mono"
+                          />
                         </div>
-                      ))}
-                    </div>
+                        <div className="sm:col-span-3 space-y-1">
+                          <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500 px-1">Capacity</label>
+                          <input
+                            type="text"
+                            placeholder="e.g. 500"
+                            value={capacity}
+                            onChange={(e) => setCapacity(e.target.value)}
+                            className="w-full bg-slate-950/80 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-700 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-mono"
+                          />
+                        </div>
+                        <div className="sm:col-span-5 space-y-1">
+                          <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500 px-1">Location</label>
+                          <div className="relative flex items-center">
+                            <svg className="w-3.5 h-3.5 text-slate-500 absolute left-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                            </svg>
+                            <input
+                              type="text"
+                              placeholder="Enter location"
+                              value={location}
+                              onChange={(e) => setLocation(e.target.value)}
+                              className="w-full bg-slate-950/80 border border-slate-800 rounded-xl pl-9 pr-3.5 py-2.5 text-xs text-white placeholder-slate-700 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-mono"
+                            />
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="sm:col-span-6 space-y-1">
+                          <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500 px-1">Ticket Code</label>
+                          <input
+                            type="text"
+                            placeholder="e.g. TKT-8492"
+                            value={ticketCode}
+                            onChange={(e) => setTicketCode(e.target.value)}
+                            className="w-full bg-slate-950/80 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-700 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-mono"
+                          />
+                        </div>
+                        <div className="sm:col-span-6 space-y-1">
+                          <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500 px-1">Email Address</label>
+                          <input
+                            type="email"
+                            placeholder="you@company.com"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="w-full bg-slate-950/80 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-700 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-mono"
+                          />
+                        </div>
+                      </>
+                    )}
+                  </div>
+
+                  {/* Submission Row */}
+                  <div className="p-3 pt-0 flex justify-end">
+                    <Link
+                      href="/login"
+                      className="py-3 px-6 rounded-xl bg-[#FF8552] text-slate-950 font-bold text-xs uppercase tracking-wider hover:bg-[#ff966c] transition-colors w-full sm:w-auto text-center"
+                    >
+                      {activeTab === 'create' ? 'Launch Event' : 'Access Ticket'}
+                    </Link>
                   </div>
                 </div>
               </div>
+
             </div>
+          </div>
+
+          {/* Right Column (Hero Event Image Grid with fade overlay) */}
+          <div className="hidden lg:block lg:w-[40%] relative overflow-hidden bg-slate-900 border-l border-slate-900/60">
+            <Image
+              src="/hero-conference.png"
+              alt="Conference Events"
+              fill
+              className="object-cover"
+              priority
+            />
+            {/* Blending Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#0c0d12] via-transparent to-transparent opacity-100 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0c0d12] via-transparent to-transparent opacity-60 pointer-events-none" />
           </div>
         </section>
 
-        {/* Stats strip */}
-        <section className="border-y border-slate-900 bg-slate-950 py-12 px-6">
+        {/* Stats Strip */}
+        <section className="border-b border-slate-900/60 bg-[#0c0d12] py-14 px-6">
           <div className="max-w-5xl mx-auto">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
               {stats.map((stat) => (
@@ -233,7 +304,7 @@ export default function Home() {
         </section>
 
         {/* Features Bento Grid */}
-        <section className="py-24 px-6 relative">
+        <section className="py-24 px-6 relative bg-[#0c0d12]">
           <div className="max-w-5xl mx-auto space-y-16">
             <div className="text-center space-y-3">
               <h2 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight">Everything required to run an event</h2>
@@ -244,7 +315,7 @@ export default function Home() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {features.map((feature) => (
-                <div key={feature.title} className="p-6 rounded-2xl bg-slate-900/35 border border-slate-900 hover:border-indigo-500/20 hover:bg-slate-900/50 transition-all duration-300 text-left space-y-4">
+                <div key={feature.title} className="p-6 rounded-2xl bg-slate-900/30 border border-slate-900/60 hover:border-indigo-500/20 hover:bg-slate-900/50 transition-all duration-300 text-left space-y-4">
                   <div className="w-10 h-10 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-center">
                     {feature.icon}
                   </div>
@@ -259,8 +330,8 @@ export default function Home() {
         </section>
 
         {/* Call to Action */}
-        <section className="py-20 px-6 relative">
-          <div className="max-w-4xl mx-auto rounded-3xl bg-gradient-to-tr from-slate-900 via-indigo-950/20 to-slate-900 border border-slate-800/80 px-8 py-16 text-center space-y-6 relative overflow-hidden">
+        <section className="py-20 px-6 relative bg-[#0c0d12] border-t border-slate-900/60">
+          <div className="max-w-4xl mx-auto rounded-3xl bg-gradient-to-tr from-slate-900/40 via-indigo-950/10 to-slate-900/40 border border-slate-900/80 px-8 py-16 text-center space-y-6 relative overflow-hidden">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full blur-[100px] opacity-[0.05] bg-indigo-500 pointer-events-none" />
             
             <h2 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight">Ready to run your next event?</h2>
@@ -270,10 +341,10 @@ export default function Home() {
             <div className="pt-4">
               <Link
                 href="/login"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-white text-slate-950 font-bold text-sm hover:bg-slate-200 transition-colors shadow-lg"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-[#FF8552] text-slate-950 font-bold text-sm hover:bg-[#ff966c] transition-colors shadow-lg"
               >
                 Create your free workspace
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <svg className="w-4.5 h-4.5 text-slate-950" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                 </svg>
               </Link>
@@ -283,7 +354,7 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-900 bg-slate-950 py-12 px-6 lg:px-10">
+      <footer className="border-t border-slate-900 bg-[#0c0d12] py-12 px-6 lg:px-12">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
           <Link href="/" className="flex items-center gap-2.5">
             <Image src="/logo-icon.svg" alt="EventForge" width={24} height={24} />
