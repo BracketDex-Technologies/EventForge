@@ -1,50 +1,22 @@
-# ── Stage 1: Install deps ──────────────────────────────────────
-FROM node:20-alpine AS deps
-WORKDIR /app
-
-RUN npm install -g pnpm
-
-# Copy workspace manifests
-COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
-COPY packages/db/package.json ./packages/db/
-COPY packages/domain/package.json ./packages/domain/
-COPY packages/config/package.json ./packages/config/
-COPY packages/api-sdk/package.json ./packages/api-sdk/
-COPY apps/api/package.json ./apps/api/
-COPY apps/web/package.json ./apps/web/
-COPY apps/workers/package.json ./apps/workers/
-
-RUN pnpm install --frozen-lockfile --ignore-scripts
-
-# ── Stage 2: Build ─────────────────────────────────────────────
+# ── Stage 1: Build ─────────────────────────────────────────────
 FROM node:20-alpine AS builder
 WORKDIR /app
 
 RUN npm install -g pnpm
 
-COPY --from=deps /app/node_modules ./node_modules
+# Copy all source files
+COPY . .
 
-# Copy source
-COPY tsconfig.base.json package.json pnpm-workspace.yaml pnpm-lock.yaml ./
-COPY apps/web/package.json ./apps/web/
-COPY apps/workers/package.json ./apps/workers/
-COPY packages/db ./packages/db
-COPY packages/domain ./packages/domain
-COPY packages/config ./packages/config
-COPY packages/api-sdk ./packages/api-sdk
-COPY apps/api ./apps/api
+# Install dependencies including devDependencies (ignoring lifecycle scripts)
+RUN pnpm install --frozen-lockfile --ignore-scripts
 
-# Generate Prisma client
-RUN pnpm --filter @eventforge/db db:generate
-
-# Build shared packages
-RUN pnpm --filter @eventforge/domain build 2>/dev/null || true
-RUN pnpm --filter @eventforge/db build 2>/dev/null || true
+# Generate Prisma client directly (bypassing dotenv-cli which requires a local .env file)
+RUN pnpm --filter @eventforge/db exec prisma generate
 
 # Build API
 RUN pnpm --filter @eventforge/api build
 
-# ── Stage 3: Production image ──────────────────────────────────
+# ── Stage 2: Production image ──────────────────────────────────
 FROM node:20-alpine AS runner
 WORKDIR /app
 
