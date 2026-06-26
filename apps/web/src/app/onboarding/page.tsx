@@ -114,7 +114,8 @@ export default function OnboardingPage() {
                 required
                 value={slug}
                 onChange={(e) => setSlug(e.target.value)}
-                className="ef-input pl-[115px] font-mono text-sm"
+                className="ef-input font-mono text-sm"
+                style={{ paddingLeft: '125px' }}
                 disabled={isPending}
               />
             </div>
