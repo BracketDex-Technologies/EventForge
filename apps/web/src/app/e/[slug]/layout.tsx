@@ -73,7 +73,7 @@ export default async function PublicEventLayout({
               {localeData?.title || event.name}
             </span>
           </Link>
-          <nav className="hidden md:flex gap-8 items-center text-sm font-medium">
+          <nav className="hidden md:flex gap-6 items-center text-sm font-medium">
             <Link href={`/e/${event.id}`} className="text-slate-600 hover:text-slate-900 transition-colors">
               Overview
             </Link>
@@ -82,6 +82,12 @@ export default async function PublicEventLayout({
             </Link>
             <Link href={`/e/${event.id}/polls`} className="text-slate-600 hover:text-slate-900 transition-colors">
               Live
+            </Link>
+            <Link href={`/e/${event.id}/cfp`} className="text-slate-600 hover:text-slate-900 transition-colors">
+              CFP
+            </Link>
+            <Link href={`/e/${event.id}/networking`} className="text-indigo-600 hover:text-indigo-700 transition-colors font-semibold">
+              🤝 Networking
             </Link>
             <Link
               href={`/e/${event.id}/tickets`}
