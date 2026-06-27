@@ -3,7 +3,10 @@
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": ".",
-    "types": ["node"]
+    "types": ["node"],
+    "paths": {
+      "@prisma/client": ["./node_modules/@prisma/client"]
+    }
   },
   "include": ["src/**/*.ts", "prisma/**/*.ts"]
 }
