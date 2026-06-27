@@ -44,3 +44,5 @@ export async function saveFloorPlan(
     return { success: false, error: 'Failed to save floor plan.' };
   }
 }
+// TS refresh
+

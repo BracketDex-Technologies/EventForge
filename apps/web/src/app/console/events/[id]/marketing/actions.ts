@@ -82,3 +82,5 @@ export async function deleteCampaign(campaignId: string, eventId: string) {
     return { success: false, error: 'Failed to delete campaign.' };
   }
 }
+// TS refresh
+
