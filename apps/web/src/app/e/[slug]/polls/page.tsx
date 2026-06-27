@@ -1,5 +1,7 @@
 import { prisma } from '@eventforge/db';
 import { notFound } from 'next/navigation';
+import { createClient } from '@/lib/supabase/server';
+import LiveEngagement from './LiveEngagement';
 
 export default async function PublicPollsPage({
   params,
@@ -18,72 +20,127 @@ export default async function PublicPollsPage({
 
   if (!event) notFound();
 
-  // Find all active polls for active sessions
-  const sessionsWithPolls = await prisma.session.findMany({
+  // Find all sessions for the event
+  const sessions = await prisma.session.findMany({
     where: { eventId: event.id },
     include: {
       polls: {
-        where: { status: 'active' }
-      }
+        where: { status: 'active' },
+        include: {
+          votes: true,
+        },
+      },
     },
-    orderBy: { startsAt: 'asc' }
+    orderBy: { startsAt: 'asc' },
   });
 
-  const activeSessions = sessionsWithPolls.filter(s => s.polls.length > 0);
+  const sessionIds = sessions.map(s => s.id);
+
+  // Load visible Q&A messages for these sessions
+  const qaMessages = await prisma.qaMessage.findMany({
+    where: {
+      sessionId: { in: sessionIds },
+      status: 'visible',
+    },
+    orderBy: { votes: 'desc' },
+  });
+
+  // Load attendee profiles for those who asked questions
+  const attendeeIds = qaMessages.map(q => q.attendeeId);
+  const attendeeProfiles = await prisma.attendeeProfile.findMany({
+    where: { id: { in: attendeeIds } },
+    select: { id: true, displayName: true },
+  });
+
+  const attendeeMap = new Map(attendeeProfiles.map(p => [p.id, p]));
+
+  // Map Q&A messages with attendee details
+  const formattedQaMessages = qaMessages.map(q => ({
+    id: q.id,
+    text: q.text,
+    votes: q.votes,
+    isAnonymous: q.isAnonymous,
+    createdAt: q.createdAt.toISOString(),
+    sessionId: q.sessionId,
+    attendee: attendeeMap.get(q.attendeeId) ? {
+      displayName: attendeeMap.get(q.attendeeId)!.displayName,
+    } : undefined,
+  }));
+
+  // Group Q&A messages by session ID
+  const sessionsWithEngagement = sessions.map(s => {
+    const sessionQa = formattedQaMessages.filter(q => q.sessionId === s.id);
+    return {
+      id: s.id,
+      title: s.title,
+      polls: s.polls.map(p => ({
+        id: p.id,
+        question: p.question,
+        options: p.options,
+        votes: p.votes.map(v => ({
+          id: v.id,
+          optionId: v.optionId,
+          attendeeId: v.attendeeId,
+        })),
+      })),
+      qaMessages: sessionQa,
+    };
+  });
+
+  // Check if current user is logged in and has an attendee profile
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  let currentAttendeeId: string | null = null;
+  if (user) {
+    const profile = await prisma.attendeeProfile.findUnique({
+      where: {
+        eventId_userId: { eventId: event.id, userId: user.id },
+      },
+    });
+    if (profile) {
+      currentAttendeeId = profile.id;
+    } else {
+      // Create a default profile on the fly so they can engage
+      const dbUser = await prisma.user.findUnique({ where: { id: user.id } });
+      const newProfile = await prisma.attendeeProfile.create({
+        data: {
+          eventId: event.id,
+          userId: user.id,
+          displayName: dbUser?.displayName || user.email?.split('@')[0] || 'Attendee',
+          visibility: 'public',
+          interests: [],
+        },
+      });
+      currentAttendeeId = newProfile.id;
+    }
+  }
 
   return (
-    <div className="max-w-2xl mx-auto w-full py-16 px-6 animate-fade-in-up">
+    <div className="max-w-4xl mx-auto w-full py-12 px-6">
       <div className="text-center space-y-2 mb-10">
-        <h1 className="ef-headline-lg text-3xl font-extrabold text-slate-900">Live Engagement</h1>
-        <p className="text-xs font-semibold" style={{ color: 'var(--ef-text-muted)' }}>
-          Participate in live session polls and Q&A questions.
+        <h1 className="text-3xl font-black text-slate-900 tracking-tight">Live Engagement Hub</h1>
+        <p className="text-xs font-semibold text-slate-500">
+          Cast your votes in live polls and submit questions directly to the speaker in real-time.
         </p>
       </div>
 
-      {activeSessions.length === 0 ? (
-        <div className="ef-card p-16 text-center bg-white shadow-sm">
+      {sessionsWithEngagement.length === 0 ? (
+        <div className="ef-card p-16 text-center bg-white shadow-sm border border-slate-100">
           <div className="w-12 h-12 bg-slate-50 text-slate-400 rounded-full flex items-center justify-center mx-auto text-xl mb-4">
             🗳️
           </div>
-          <p className="font-semibold text-slate-800 text-sm">No active polls right now</p>
-          <p className="text-xs mt-1" style={{ color: 'var(--ef-text-muted)' }}>
-            Polls will appear here when the speaker launches them during the live talk.
+          <p className="font-bold text-slate-800 text-sm">No sessions scheduled yet</p>
+          <p className="text-xs text-slate-400 mt-1">
+            Agenda sessions and live engagement boards will appear here.
           </p>
         </div>
       ) : (
-        <div className="space-y-8">
-          {activeSessions.map(session => (
-            <div key={session.id} className="ef-card overflow-hidden bg-white shadow-sm border border-slate-100">
-              {/* Card header */}
-              <div className="px-6 py-4 border-b border-indigo-50/50 flex justify-between items-center" 
-                   style={{ background: 'linear-gradient(135deg, #0f1629 0%, #1c243f 100%)' }}>
-                <h2 className="font-bold text-sm text-white">
-                  🎙️ {typeof session.title === 'string' ? session.title : (session.title as any)?.en || 'Untitled Session'}
-                </h2>
-              </div>
-              
-              <div className="p-6 space-y-6">
-                {session.polls.map(poll => (
-                  <div key={poll.id} className="border border-slate-100 rounded-xl p-6 bg-slate-50/50">
-                    <h3 className="font-bold text-base mb-4 text-slate-900 leading-snug">
-                      {typeof poll.question === 'string' ? poll.question : (poll.question as any)?.en || 'Untitled Poll'}
-                    </h3>
-                    
-                    <div className="space-y-3">
-                      {/* Interactive mock options */}
-                      <button className="w-full text-left text-xs font-semibold px-4 py-3 border border-slate-200 rounded-xl bg-white hover:border-indigo-500 hover:bg-indigo-50/20 transition-all">
-                        Option A
-                      </button>
-                      <button className="w-full text-left text-xs font-semibold px-4 py-3 border border-slate-200 rounded-xl bg-white hover:border-indigo-500 hover:bg-indigo-50/20 transition-all">
-                        Option B
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
+        <LiveEngagement
+          eventId={event.id}
+          sessions={sessionsWithEngagement}
+          currentAttendeeId={currentAttendeeId}
+        />
       )}
     </div>
   );
