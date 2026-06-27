@@ -61,4 +61,13 @@ export type {
   WorkflowRun,
   EmailEvent,
   EventMetricHourly,
+  CfpConfig,
+  Abstract,
+  AbstractReview,
+  CertificateTemplate,
+  Certificate,
+  FloorPlan,
+  PushNotification,
+  PushSubscription,
 } from '@prisma/client';
+
