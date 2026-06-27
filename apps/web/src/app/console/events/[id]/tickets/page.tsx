@@ -48,6 +48,7 @@ export default async function TicketsPage({
       <div className="flex border-b border-slate-200 gap-6 text-sm">
         <Link href={`/console/events/${id}/tickets`} className="border-b-2 border-indigo-600 pb-3 font-semibold text-indigo-600">Ticket Tiers</Link>
         <Link href={`/console/events/${id}/tickets/promos`} className="border-b-2 border-transparent pb-3 font-medium text-slate-500 hover:text-slate-900">Promo Codes</Link>
+        <Link href={`/console/events/${id}/tickets/waitlist`} className="border-b-2 border-transparent pb-3 font-medium text-slate-500 hover:text-slate-900">Waitlist</Link>
       </div>
 
       <div className="ef-card animate-fade-in-up delay-200">

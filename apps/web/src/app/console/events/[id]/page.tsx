@@ -1,6 +1,7 @@
 import { prisma } from '@eventforge/db';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import CloneEventButton from './CloneEventButton';
 
 export default async function EventEditorPage({
   params,
@@ -70,6 +71,7 @@ export default async function EventEditorPage({
           >
             {event.status}
           </span>
+          <CloneEventButton eventId={id} />
         </div>
       </div>
 
