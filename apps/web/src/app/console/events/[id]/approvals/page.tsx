@@ -3,6 +3,7 @@ import { evaluateApprovalPolicy } from '@eventforge/domain';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { CheckCircle2, CircleAlert, ShieldCheck } from 'lucide-react';
+import ApprovalActions from './ApprovalActions';
 
 export default async function ApprovalsPage({
   params,
@@ -170,6 +171,11 @@ export default async function ApprovalsPage({
                       {request.status}
                     </span>
                   </div>
+                  {request.status === 'pending' && (
+                    <div className="mt-4">
+                      <ApprovalActions eventId={event.id} requestId={request.id} />
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

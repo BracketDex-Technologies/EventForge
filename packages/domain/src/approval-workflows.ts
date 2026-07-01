@@ -2,6 +2,8 @@ export type ApprovalMode = 'off' | 'manual' | 'conditional';
 export type ApprovalRequestType = 'registration' | 'cancellation';
 export type ApprovalDecision = 'auto_approve' | 'requires_review' | 'reject';
 export type ApprovalSeverity = 'low' | 'medium' | 'critical';
+export type ApprovalRequestStatus = 'pending' | 'approved' | 'rejected' | 'cancelled';
+export type ApprovalResolution = 'approved' | 'rejected';
 
 export interface ApprovalPolicyInput {
   approvalMode: ApprovalMode;
@@ -17,6 +19,18 @@ export interface ApprovalPolicyResult {
   decision: ApprovalDecision;
   severity: ApprovalSeverity;
   reasons: string[];
+}
+
+export interface ApprovalResolutionInput {
+  currentStatus: ApprovalRequestStatus;
+  resolution: ApprovalResolution;
+  reason: string;
+}
+
+export interface ApprovalResolutionResult {
+  status: ApprovalResolution;
+  decisionReason: string;
+  isTerminal: true;
 }
 
 export function evaluateApprovalPolicy(input: ApprovalPolicyInput): ApprovalPolicyResult {
@@ -67,6 +81,25 @@ export function evaluateApprovalPolicy(input: ApprovalPolicyInput): ApprovalPoli
     decision: 'auto_approve',
     severity: 'low',
     reasons: ['Conditional approval checks passed.'],
+  };
+}
+
+export function resolveApprovalRequest(
+  input: ApprovalResolutionInput,
+): ApprovalResolutionResult {
+  if (input.currentStatus !== 'pending') {
+    throw new Error('Only pending approval requests can be resolved.');
+  }
+
+  const decisionReason = input.reason.trim();
+  if (!decisionReason) {
+    throw new Error('Approval resolution requires a decision reason.');
+  }
+
+  return {
+    status: input.resolution,
+    decisionReason,
+    isTerminal: true,
   };
 }
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { evaluateApprovalPolicy } from './approval-workflows';
+import { evaluateApprovalPolicy, resolveApprovalRequest } from './approval-workflows';
 
 describe('evaluateApprovalPolicy', () => {
   it('auto-approves registrations when approval is disabled and capacity is available', () => {
@@ -65,5 +65,42 @@ describe('evaluateApprovalPolicy', () => {
 
     expect(result.decision).toBe('requires_review');
     expect(result.reasons).toEqual(['Manual organizer approval is required.']);
+  });
+});
+
+describe('resolveApprovalRequest', () => {
+  it('approves a pending request with a decision reason', () => {
+    const result = resolveApprovalRequest({
+      currentStatus: 'pending',
+      resolution: 'approved',
+      reason: 'Enterprise buyer verified.',
+    });
+
+    expect(result).toEqual({
+      status: 'approved',
+      decisionReason: 'Enterprise buyer verified.',
+      isTerminal: true,
+    });
+  });
+
+  it('rejects a pending request and requires a reason', () => {
+    const result = resolveApprovalRequest({
+      currentStatus: 'pending',
+      resolution: 'rejected',
+      reason: 'Blocked procurement domain.',
+    });
+
+    expect(result.status).toBe('rejected');
+    expect(result.decisionReason).toBe('Blocked procurement domain.');
+  });
+
+  it('prevents resolving a non-pending request', () => {
+    expect(() =>
+      resolveApprovalRequest({
+        currentStatus: 'approved',
+        resolution: 'rejected',
+        reason: 'Changed mind.',
+      }),
+    ).toThrow('Only pending approval requests can be resolved.');
   });
 });

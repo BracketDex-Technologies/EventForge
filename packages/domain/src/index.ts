@@ -15,14 +15,19 @@
 import { z } from 'zod';
 export { buildOpsIntelligence } from './ops-intelligence';
 export { buildCompetitiveCoverage } from './competitive-coverage';
+export { buildCsv } from './csv-export';
 export { buildEventReadiness } from './event-readiness';
-export { evaluateApprovalPolicy } from './approval-workflows';
+export { evaluateApprovalPolicy, resolveApprovalRequest } from './approval-workflows';
 export type {
   ApprovalDecision,
   ApprovalMode,
   ApprovalPolicyInput,
   ApprovalPolicyResult,
+  ApprovalRequestStatus,
   ApprovalRequestType,
+  ApprovalResolution,
+  ApprovalResolutionInput,
+  ApprovalResolutionResult,
   ApprovalSeverity,
 } from './approval-workflows';
 export type {
@@ -32,6 +37,7 @@ export type {
   CompetitiveGap,
   EventForgeAiCapability,
 } from './competitive-coverage';
+export type { BuildCsvInput, CsvColumn } from './csv-export';
 export type {
   EventReadinessInput,
   EventReadinessItem,
