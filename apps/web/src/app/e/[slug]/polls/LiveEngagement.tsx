@@ -45,8 +45,12 @@ interface LiveEngagementProps {
   currentAttendeeId: string | null;
 }
 
+function getInitialSessionId(sessions: Session[]) {
+  return sessions.find(session => session.polls.length > 0 || session.qaMessages.length > 0)?.id || sessions[0]?.id || '';
+}
+
 export default function LiveEngagement({ eventId, sessions, currentAttendeeId }: LiveEngagementProps) {
-  const [activeSessionId, setActiveSessionId] = useState<string>(sessions[0]?.id || '');
+  const [activeSessionId, setActiveSessionId] = useState<string>(() => getInitialSessionId(sessions));
   const [activeTab, setActiveTab] = useState<'polls' | 'qa'>('polls');
   const [isPending, startTransition] = useTransition();
 

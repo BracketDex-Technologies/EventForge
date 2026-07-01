@@ -90,6 +90,47 @@ body {
   line-height: 1.6;
 }
 
+html[data-ef-large-text='true'] body {
+  font-size: 16px;
+}
+
+html[data-ef-large-text='true'] button,
+html[data-ef-large-text='true'] input,
+html[data-ef-large-text='true'] textarea,
+html[data-ef-large-text='true'] select {
+  font-size: 1rem;
+}
+
+html[data-ef-high-contrast='true'] body {
+  --ef-bg: #ffffff;
+  --ef-surface: #ffffff;
+  --ef-surface-hover: #f8fafc;
+  --ef-text-primary: #020617;
+  --ef-text-secondary: #0f172a;
+  --ef-text-muted: #334155;
+  --ef-border: #0f172a;
+  --ef-border-strong: #020617;
+  filter: contrast(1.08);
+}
+
+html[data-ef-high-contrast='true'] a,
+html[data-ef-high-contrast='true'] button {
+  text-decoration-thickness: 2px;
+}
+
+html[data-ef-reading-guide='true'] body::before {
+  content: '';
+  position: fixed;
+  top: 42vh;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  height: 3px;
+  pointer-events: none;
+  background: #111827;
+  box-shadow: 0 0 0 9999px rgba(255, 255, 255, 0.14);
+}
+
 /* ─── Scrollbar ─── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }

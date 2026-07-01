@@ -13,6 +13,38 @@
  */
 
 import { z } from 'zod';
+export { buildOpsIntelligence } from './ops-intelligence';
+export { buildCompetitiveCoverage } from './competitive-coverage';
+export { buildEventReadiness } from './event-readiness';
+export { evaluateApprovalPolicy } from './approval-workflows';
+export type {
+  ApprovalDecision,
+  ApprovalMode,
+  ApprovalPolicyInput,
+  ApprovalPolicyResult,
+  ApprovalRequestType,
+  ApprovalSeverity,
+} from './approval-workflows';
+export type {
+  BackstageBaselineCapability,
+  CompetitiveCoverageInput,
+  CompetitiveCoverageResult,
+  CompetitiveGap,
+  EventForgeAiCapability,
+} from './competitive-coverage';
+export type {
+  EventReadinessInput,
+  EventReadinessItem,
+  EventReadinessKey,
+  EventReadinessResult,
+} from './event-readiness';
+export type {
+  OpsIntelligenceInput,
+  OpsIntelligenceResult,
+  OpsRecommendation,
+  OpsRecommendationSeverity,
+  OpsRecommendationType,
+} from './ops-intelligence';
 
 // ─────────────────────────────────────────────────────────────
 //  Primitive helpers

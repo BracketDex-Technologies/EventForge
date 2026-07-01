@@ -20,6 +20,16 @@ export class CheckInsService {
   async checkIn(ctx: TenantContext, input: CreateCheckIn) {
     await this.ensureEventInTenant(ctx, input.eventId);
 
+    const existing = await this.prisma.client.checkIn.findFirst({
+      where: {
+        eventId: input.eventId,
+        idempotencyKey: input.idempotencyKey,
+      },
+    });
+    if (existing) {
+      return existing;
+    }
+
     let ticket = null;
     if (input.ticketCode) {
       ticket = await this.prisma.client.ticket.findUnique({
@@ -45,6 +55,7 @@ export class CheckInsService {
           method: input.method,
           location: input.location ?? null,
           staffId: ctx.user?.id ?? null,
+          idempotencyKey: input.idempotencyKey,
         },
       });
 
@@ -54,6 +65,8 @@ export class CheckInsService {
           data: { status: 'checked_in', checkedInAt: new Date(), checkedInBy: ctx.user?.id ?? null },
         });
       }
+
+      await this.recordHourlyMetric(input.eventId, { checkIns: 1 });
 
       await this.audit.record({
         ctx,
@@ -109,5 +122,27 @@ export class CheckInsService {
     if (!event) {
       throw new NotFoundException('Event not found');
     }
+  }
+
+  private async recordHourlyMetric(
+    eventId: string,
+    metric: { checkIns?: number },
+  ) {
+    const hourBucket = new Date();
+    hourBucket.setMinutes(0, 0, 0);
+    return this.prisma.client.eventMetricHourly.upsert({
+      where: { eventId_hourBucket: { eventId, hourBucket } },
+      create: {
+        eventId,
+        hourBucket,
+        registrations: 0,
+        revenueCents: 0n,
+        checkIns: metric.checkIns ?? 0,
+        refundsCents: 0n,
+      },
+      update: {
+        checkIns: { increment: metric.checkIns ?? 0 },
+      },
+    });
   }
 }

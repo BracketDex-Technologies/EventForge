@@ -25,7 +25,7 @@ export default async function PublicPollsPage({
     where: { eventId: event.id },
     include: {
       polls: {
-        where: { status: 'active' },
+        where: { status: 'live' },
         include: {
           votes: true,
         },

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import type { Metadata } from 'next';
 import PushSubscribePrompt from './PushSubscribePrompt';
+import AccessibilityToolbar from './AccessibilityToolbar';
 
 export async function generateMetadata({
   params,
@@ -11,20 +12,22 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug);
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug);
 
   const event = await prisma.event.findFirst({
     where: isUuid ? { id: slug, deletedAt: null } : { id: slug, deletedAt: null },
     include: {
-      locales: { where: { locale: 'en' } }
-    }
+      locales: { where: { locale: 'en' } },
+    },
   });
 
   if (!event) return {};
 
   const localeData = event.locales[0];
   const title = localeData?.title || event.name;
-  const description = localeData?.summary || `Join us for ${event.name}. Plan, ticket, and run professional events with EventForge.`;
+  const description =
+    localeData?.summary ||
+    `Join us for ${event.name}. Plan, ticket, and run professional events with EventForge.`;
 
   return {
     title,
@@ -50,13 +53,13 @@ export default async function PublicEventLayout({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug);
-  
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug);
+
   const event = await prisma.event.findFirst({
     where: isUuid ? { id: slug, deletedAt: null } : { id: slug, deletedAt: null },
     include: {
-      locales: { where: { locale: 'en' } }
-    }
+      locales: { where: { locale: 'en' } },
+    },
   });
 
   if (!event) notFound();
@@ -86,13 +89,13 @@ export default async function PublicEventLayout({
             <Link href={`/e/${event.id}/cfp`} className="text-slate-600 hover:text-slate-900 transition-colors">
               CFP
             </Link>
-            <Link href={`/e/${event.id}/networking`} className="text-indigo-600 hover:text-indigo-700 transition-colors font-semibold">
-              🤝 Networking
-            </Link>
             <Link
-              href={`/e/${event.id}/tickets`}
-              className="ef-btn-primary text-xs px-5 py-2"
+              href={`/e/${event.id}/networking`}
+              className="text-indigo-600 hover:text-indigo-700 transition-colors font-semibold"
             >
+              Networking
+            </Link>
+            <Link href={`/e/${event.id}/tickets`} className="ef-btn-primary text-xs px-5 py-2">
               Get Tickets
             </Link>
           </nav>
@@ -102,6 +105,7 @@ export default async function PublicEventLayout({
       <main className="flex-1">
         {children}
         <PushSubscribePrompt eventId={event.id} />
+        <AccessibilityToolbar />
       </main>
 
       <footer className="bg-slate-900 text-slate-400 py-10 px-6">
@@ -111,8 +115,12 @@ export default async function PublicEventLayout({
             <p className="font-bold text-white text-sm">{localeData?.title || event.name}</p>
           </div>
           <div className="flex gap-8 text-xs">
-            <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
-            <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
+            <Link href="/privacy" className="hover:text-white transition-colors">
+              Privacy
+            </Link>
+            <Link href="/terms" className="hover:text-white transition-colors">
+              Terms
+            </Link>
           </div>
           <p className="text-[11px] text-slate-500">Powered by EventForge</p>
         </div>

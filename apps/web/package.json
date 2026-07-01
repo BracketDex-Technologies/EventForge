@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@eventforge/db": "workspace:*",
+    "@eventforge/domain": "workspace:*",
     "@stripe/react-stripe-js": "^6.6.0",
     "@stripe/stripe-js": "^9.8.0",
     "@supabase/ssr": "^0.12.0",

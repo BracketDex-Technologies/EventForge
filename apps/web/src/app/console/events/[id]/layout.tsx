@@ -6,6 +6,7 @@ import EventNav from './EventNav';
 const tabs = [
   { label: 'Overview', href: '' },
   { label: 'Tickets', href: '/tickets' },
+  { label: 'Approvals', href: '/approvals' },
   { label: 'Agenda', href: '/agenda' },
   { label: 'Polls & Q&A', href: '/polls' },
   { label: 'Check-ins', href: '/check-ins' },
@@ -20,6 +21,7 @@ const tabs = [
   { label: 'Floor Plan', href: '/floor-plan' },
   { label: 'Notifications', href: '/notifications' },
   { label: 'Analytics', href: '/analytics' },
+  { label: 'Readiness', href: '/readiness' },
   { label: 'Settings', href: '/settings' },
 ];
 
